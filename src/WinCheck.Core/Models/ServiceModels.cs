@@ -9,7 +9,7 @@ public class WindowsServiceInfo
     public string DisplayName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public ServiceStatus Status { get; set; }
-    public ServiceStartMode StartMode { get; set; }
+    public WinCheckServiceStartMode StartMode { get; set; }
     public string ExecutablePath { get; set; } = string.Empty;
     public long MemoryUsageBytes { get; set; }
     public int ProcessId { get; set; }
@@ -31,7 +31,7 @@ public enum ServiceStatus
     Unknown
 }
 
-public enum ServiceStartMode
+public enum WinCheckServiceStartMode
 {
     Automatic,
     AutomaticDelayed,
@@ -47,13 +47,13 @@ public class ServiceOptimization
     public string DisplayName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Reason { get; set; } = string.Empty;
-    public ServiceStartMode CurrentStartMode { get; set; }
-    public ServiceStartMode RecommendedStartMode { get; set; }
+    public WinCheckServiceStartMode CurrentStartMode { get; set; }
+    public WinCheckServiceStartMode RecommendedStartMode { get; set; }
     public SafetyLevel Safety { get; set; }
     public long EstimatedMemorySavingBytes { get; set; }
     public int EstimatedBootTimeSavingMs { get; set; }
     public bool RequiresRestart { get; set; }
-    public ServiceStartMode BackupStartMode { get; set; }
+    public WinCheckServiceStartMode BackupStartMode { get; set; }
 }
 
 public enum SafetyLevel
@@ -74,6 +74,6 @@ public class ServiceBackup
 public class ServiceBackupEntry
 {
     public string ServiceName { get; set; } = string.Empty;
-    public ServiceStartMode StartMode { get; set; }
+    public WinCheckServiceStartMode StartMode { get; set; }
     public ServiceStatus Status { get; set; }
 }

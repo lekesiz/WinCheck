@@ -122,7 +122,7 @@ public class HardwareDetectionService : IHardwareDetectionService
         // Calculate component health scores
         health.ComponentHealth["CPU"] = profile.Cpu.CurrentTemperature < 70 ? 100 : (profile.Cpu.CurrentTemperature < 85 ? 80 : 50);
         health.ComponentHealth["Memory"] = 100; // No direct health metric for RAM
-        health.ComponentHealth["Storage"] = profile.Storage.Any() ? profile.Storage.Average(s => s.SmartData.HealthPercentage) : 100;
+        health.ComponentHealth["Storage"] = profile.Storage.Any() ? (int)profile.Storage.Average(s => s.SmartData.HealthPercentage) : 100;
 
         if (profile.Battery != null)
         {

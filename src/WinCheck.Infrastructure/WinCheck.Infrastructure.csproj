@@ -18,6 +18,7 @@
     <PackageReference Include="System.Management" Version="8.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.*" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.10" />
   </ItemGroup>
 
 </Project>

@@ -242,7 +242,7 @@ public class AISystemAnalyzer : IAISystemAnalyzer
         }
 
         var osOptimizations = await _osService.GetRecommendedOptimizationsAsync();
-        foreach (var opt in osOptimizations.Where(o => o.Safety != OptimizationImpact.High).Take(5))
+        foreach (var opt in osOptimizations.Where(o => o.Impact != OptimizationImpact.High).Take(5))
         {
             plan.Steps.Add(new OptimizationStep
             {

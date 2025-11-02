@@ -104,35 +104,35 @@ public class OSDetectionService : IOSDetectionService
             {
                 switch (step.Type)
                 {
-                    case StepType.SetRegistryValue:
+                    case OSStepType.SetRegistryValue:
                         SetRegistryValue(step.Target, step.Value);
                         break;
 
-                    case StepType.DeleteRegistryValue:
+                    case OSStepType.DeleteRegistryValue:
                         DeleteRegistryValue(step.Target);
                         break;
 
-                    case StepType.StopService:
+                    case OSStepType.StopService:
                         await StopServiceAsync(step.Target);
                         break;
 
-                    case StepType.DisableService:
+                    case OSStepType.DisableService:
                         await DisableServiceAsync(step.Target);
                         break;
 
-                    case StepType.EnableService:
+                    case OSStepType.EnableService:
                         await EnableServiceAsync(step.Target);
                         break;
 
-                    case StepType.RunCommand:
+                    case OSStepType.RunCommand:
                         await RunCommandAsync(step.Target);
                         break;
 
-                    case StepType.DeleteFile:
+                    case OSStepType.DeleteFile:
                         DeleteFile(step.Target);
                         break;
 
-                    case StepType.SetGroupPolicy:
+                    case OSStepType.SetGroupPolicy:
                         SetGroupPolicy(step.Target, step.Value);
                         break;
                 }
@@ -350,10 +350,10 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.Medium,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
-                new() { Type = StepType.StopService, Target = "WSearch" },
-                new() { Type = StepType.DisableService, Target = "WSearch" }
+                new() { Type = OSStepType.StopService, Target = "WSearch" },
+                new() { Type = OSStepType.DisableService, Target = "WSearch" }
             }
         });
 
@@ -369,10 +369,10 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.Low,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
-                new() { Type = StepType.StopService, Target = "SysMain" },
-                new() { Type = StepType.DisableService, Target = "SysMain" }
+                new() { Type = OSStepType.StopService, Target = "SysMain" },
+                new() { Type = OSStepType.DisableService, Target = "SysMain" }
             }
         });
 
@@ -390,11 +390,11 @@ public class OSDetectionService : IOSDetectionService
                 Impact = OptimizationImpact.Low,
                 RequiresRestart = false,
                 IsReversible = true,
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\SoftLandingEnabled",
                         Value = "0"
                     }
@@ -416,17 +416,17 @@ public class OSDetectionService : IOSDetectionService
                 Impact = OptimizationImpact.Medium,
                 RequiresRestart = false,
                 IsReversible = true,
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_CURRENT_USER\System\GameConfigStore\GameDVR_Enabled",
                         Value = "0"
                     },
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR\AppCaptureEnabled",
                         Value = "0"
                     }
@@ -449,11 +449,11 @@ public class OSDetectionService : IOSDetectionService
                 RequiresRestart = true,
                 IsReversible = true,
                 WarningMessage = "Requires compatible GPU driver",
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\HwSchMode",
                         Value = "2"
                     }
@@ -482,16 +482,16 @@ public class OSDetectionService : IOSDetectionService
                 Impact = OptimizationImpact.Low,
                 RequiresRestart = false,
                 IsReversible = true,
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection\AllowTelemetry",
                         Value = "0"
                     },
-                    new() { Type = StepType.DisableService, Target = "DiagTrack" },
-                    new() { Type = StepType.DisableService, Target = "dmwappushservice" }
+                    new() { Type = OSStepType.DisableService, Target = "DiagTrack" },
+                    new() { Type = OSStepType.DisableService, Target = "dmwappushservice" }
                 }
             });
         }
@@ -510,11 +510,11 @@ public class OSDetectionService : IOSDetectionService
                 Impact = OptimizationImpact.Low,
                 RequiresRestart = false,
                 IsReversible = true,
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search\AllowCortana",
                         Value = "0"
                     }
@@ -534,11 +534,11 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.Low,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
                 new()
                 {
-                    Type = StepType.SetRegistryValue,
+                    Type = OSStepType.SetRegistryValue,
                     Target = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\Value",
                     Value = "Deny"
                 }
@@ -559,17 +559,17 @@ public class OSDetectionService : IOSDetectionService
                 Impact = OptimizationImpact.Low,
                 RequiresRestart = false,
                 IsReversible = true,
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\EnableActivityFeed",
                         Value = "0"
                     },
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\PublishUserActivities",
                         Value = "0"
                     }
@@ -596,11 +596,11 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.High,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
                 new()
                 {
-                    Type = StepType.SetRegistryValue,
+                    Type = OSStepType.SetRegistryValue,
                     Target = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware",
                     Value = "0"
                 }
@@ -619,9 +619,9 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.High,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
-                new() { Type = StepType.RunCommand, Target = "netsh advfirewall set allprofiles state on" }
+                new() { Type = OSStepType.RunCommand, Target = "netsh advfirewall set allprofiles state on" }
             }
         });
 
@@ -640,9 +640,9 @@ public class OSDetectionService : IOSDetectionService
                 RequiresRestart = true,
                 IsReversible = true,
                 WarningMessage = "May affect compatibility with very old network devices",
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
-                    new() { Type = StepType.RunCommand, Target = "dism /online /disable-feature /featurename:SMB1Protocol /norestart" }
+                    new() { Type = OSStepType.RunCommand, Target = "dism /online /disable-feature /featurename:SMB1Protocol /norestart" }
                 }
             });
         }
@@ -666,11 +666,11 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.Medium,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
                 new()
                 {
-                    Type = StepType.SetRegistryValue,
+                    Type = OSStepType.SetRegistryValue,
                     Target = @"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics\MinAnimate",
                     Value = "0"
                 }
@@ -689,11 +689,11 @@ public class OSDetectionService : IOSDetectionService
             Impact = OptimizationImpact.Low,
             RequiresRestart = false,
             IsReversible = true,
-            Steps = new List<OptimizationStep>
+            Steps = new List<OSOptimizationStep>
             {
                 new()
                 {
-                    Type = StepType.SetRegistryValue,
+                    Type = OSStepType.SetRegistryValue,
                     Target = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\HideFileExt",
                     Value = "0"
                 }
@@ -714,11 +714,11 @@ public class OSDetectionService : IOSDetectionService
                 Impact = OptimizationImpact.Low,
                 RequiresRestart = false,
                 IsReversible = true,
-                Steps = new List<OptimizationStep>
+                Steps = new List<OSOptimizationStep>
                 {
                     new()
                     {
-                        Type = StepType.SetRegistryValue,
+                        Type = OSStepType.SetRegistryValue,
                         Target = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize\EnableTransparency",
                         Value = "0"
                     }

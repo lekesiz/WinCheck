@@ -44,7 +44,7 @@ public class OSOptimization
     public bool RequiresRestart { get; set; }
     public bool IsReversible { get; set; }
     public string WarningMessage { get; set; } = string.Empty;
-    public List<OptimizationStep> Steps { get; set; } = new();
+    public List<OSOptimizationStep> Steps { get; set; } = new();
 }
 
 public enum OptimizationImpact
@@ -54,15 +54,15 @@ public enum OptimizationImpact
     High
 }
 
-public class OptimizationStep
+public class OSOptimizationStep
 {
-    public StepType Type { get; set; }
+    public OSStepType Type { get; set; }
     public string Target { get; set; } = string.Empty; // Registry path, service name, etc.
     public string Value { get; set; } = string.Empty;
     public string BackupValue { get; set; } = string.Empty;
 }
 
-public enum StepType
+public enum OSStepType
 {
     SetRegistryValue,
     DeleteRegistryValue,

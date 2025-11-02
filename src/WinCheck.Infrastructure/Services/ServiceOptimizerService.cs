@@ -119,24 +119,24 @@ public class ServiceOptimizerService : IServiceOptimizerService
             {
                 var startValue = optimization.RecommendedStartMode switch
                 {
-                    ServiceStartMode.Automatic => 2,
-                    ServiceStartMode.AutomaticDelayed => 2,
-                    ServiceStartMode.Manual => 3,
-                    ServiceStartMode.Disabled => 4,
+                    WinCheckServiceStartMode.Automatic => 2,
+                    WinCheckServiceStartMode.AutomaticDelayed => 2,
+                    WinCheckServiceStartMode.Manual => 3,
+                    WinCheckServiceStartMode.Disabled => 4,
                     _ => 3
                 };
 
                 key.SetValue("Start", startValue);
 
                 // Set delayed auto-start if needed
-                if (optimization.RecommendedStartMode == ServiceStartMode.AutomaticDelayed)
+                if (optimization.RecommendedStartMode == WinCheckServiceStartMode.AutomaticDelayed)
                 {
                     key.SetValue("DelayedAutostart", 1);
                 }
             }
 
             // Stop service if recommended mode is Disabled or Manual
-            if (optimization.RecommendedStartMode is ServiceStartMode.Disabled or ServiceStartMode.Manual)
+            if (optimization.RecommendedStartMode is WinCheckServiceStartMode.Disabled or WinCheckServiceStartMode.Manual)
             {
                 try
                 {
@@ -176,10 +176,10 @@ public class ServiceOptimizerService : IServiceOptimizerService
             {
                 var startValue = entry.StartMode switch
                 {
-                    ServiceStartMode.Automatic => 2,
-                    ServiceStartMode.AutomaticDelayed => 2,
-                    ServiceStartMode.Manual => 3,
-                    ServiceStartMode.Disabled => 4,
+                    WinCheckServiceStartMode.Automatic => 2,
+                    WinCheckServiceStartMode.AutomaticDelayed => 2,
+                    WinCheckServiceStartMode.Manual => 3,
+                    WinCheckServiceStartMode.Disabled => 4,
                     _ => 3
                 };
 
@@ -292,18 +292,18 @@ public class ServiceOptimizerService : IServiceOptimizerService
         };
     }
 
-    private ServiceStartMode ConvertStartMode(object? startValue)
+    private WinCheckServiceStartMode ConvertStartMode(object? startValue)
     {
-        if (startValue == null) return ServiceStartMode.Manual;
+        if (startValue == null) return WinCheckServiceStartMode.Manual;
 
         return Convert.ToInt32(startValue) switch
         {
-            0 => ServiceStartMode.Boot,
-            1 => ServiceStartMode.System,
-            2 => ServiceStartMode.Automatic,
-            3 => ServiceStartMode.Manual,
-            4 => ServiceStartMode.Disabled,
-            _ => ServiceStartMode.Manual
+            0 => WinCheckServiceStartMode.Boot,
+            1 => WinCheckServiceStartMode.System,
+            2 => WinCheckServiceStartMode.Automatic,
+            3 => WinCheckServiceStartMode.Manual,
+            4 => WinCheckServiceStartMode.Disabled,
+            _ => WinCheckServiceStartMode.Manual
         };
     }
 
@@ -318,7 +318,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "DiagTrack",
                 DisplayName = "Connected User Experiences and Telemetry",
                 Reason = "Collects diagnostic data. Disable for privacy.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 10 * 1024 * 1024,
                 EstimatedBootTimeSavingMs = 200
@@ -328,7 +328,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "dmwappushservice",
                 DisplayName = "WAP Push Message Routing Service",
                 Reason = "Used for telemetry. Safe to disable.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 5 * 1024 * 1024
             },
@@ -339,7 +339,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "WSearch",
                 DisplayName = "Windows Search",
                 Reason = "Heavy disk/CPU usage. Disable if you don't use Windows search.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.MostlySafe,
                 EstimatedMemorySavingBytes = 50 * 1024 * 1024,
                 EstimatedBootTimeSavingMs = 500
@@ -351,7 +351,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "SysMain",
                 DisplayName = "SysMain (Superfetch)",
                 Reason = "Not needed on SSDs. Can cause high disk usage.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 30 * 1024 * 1024,
                 EstimatedBootTimeSavingMs = 300
@@ -363,7 +363,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "Spooler",
                 DisplayName = "Print Spooler",
                 Reason = "Only needed if you use a printer.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 15 * 1024 * 1024
             },
@@ -374,7 +374,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "Fax",
                 DisplayName = "Fax Service",
                 Reason = "Rarely used. Safe to disable.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 10 * 1024 * 1024
             },
@@ -385,7 +385,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "WbioSrvc",
                 DisplayName = "Windows Biometric Service",
                 Reason = "Only needed for fingerprint readers.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 8 * 1024 * 1024
             },
@@ -396,7 +396,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "RemoteRegistry",
                 DisplayName = "Remote Registry",
                 Reason = "Security risk. Disable unless specifically needed.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 5 * 1024 * 1024
             },
@@ -407,7 +407,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "XblAuthManager",
                 DisplayName = "Xbox Live Auth Manager",
                 Reason = "Only needed for Xbox features.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 12 * 1024 * 1024
             },
@@ -416,7 +416,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "XblGameSave",
                 DisplayName = "Xbox Live Game Save",
                 Reason = "Only needed for Xbox features.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 8 * 1024 * 1024
             },
@@ -425,7 +425,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "XboxNetApiSvc",
                 DisplayName = "Xbox Live Networking Service",
                 Reason = "Only needed for Xbox features.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 10 * 1024 * 1024
             },
@@ -436,7 +436,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "bthserv",
                 DisplayName = "Bluetooth Support Service",
                 Reason = "Only needed if using Bluetooth devices.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 15 * 1024 * 1024
             },
@@ -447,7 +447,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "TabletInputService",
                 DisplayName = "Touch Keyboard and Handwriting Panel Service",
                 Reason = "Only needed for touch screens.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 20 * 1024 * 1024
             },
@@ -458,7 +458,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "WerSvc",
                 DisplayName = "Windows Error Reporting",
                 Reason = "Sends crash reports to Microsoft. Can be disabled.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 8 * 1024 * 1024
             },
@@ -469,7 +469,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "iphlpsvc",
                 DisplayName = "IP Helper",
                 Reason = "Only needed for IPv6. Can disable if using IPv4 only.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 6 * 1024 * 1024
             },
@@ -480,7 +480,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "CscService",
                 DisplayName = "Offline Files",
                 Reason = "Rarely used feature. Can be disabled.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 15 * 1024 * 1024
             },
@@ -491,7 +491,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "PcaSvc",
                 DisplayName = "Program Compatibility Assistant Service",
                 Reason = "Not critical. Can be set to manual.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.MostlySafe,
                 EstimatedMemorySavingBytes = 10 * 1024 * 1024
             },
@@ -502,7 +502,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "seclogon",
                 DisplayName = "Secondary Logon",
                 Reason = "Only needed if running programs as different user.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 5 * 1024 * 1024
             },
@@ -513,7 +513,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "SCardSvr",
                 DisplayName = "Smart Card",
                 Reason = "Only needed for smart card readers.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 8 * 1024 * 1024
             },
@@ -524,7 +524,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "WMPNetworkSvc",
                 DisplayName = "Windows Media Player Network Sharing Service",
                 Reason = "Only needed if sharing media with Windows Media Player.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 12 * 1024 * 1024
             },
@@ -535,7 +535,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "icssvc",
                 DisplayName = "Windows Mobile Hotspot Service",
                 Reason = "Only needed for mobile hotspot feature.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 10 * 1024 * 1024
             },
@@ -546,7 +546,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "lfsvc",
                 DisplayName = "Geolocation Service",
                 Reason = "Privacy concern. Disable if not using location features.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 7 * 1024 * 1024
             },
@@ -557,7 +557,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "MapsBroker",
                 DisplayName = "Downloaded Maps Manager",
                 Reason = "Only needed for Maps app.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 15 * 1024 * 1024
             },
@@ -568,7 +568,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "RetailDemo",
                 DisplayName = "Retail Demo Service",
                 Reason = "Retail store feature. Safe to disable.",
-                RecommendedStartMode = ServiceStartMode.Disabled,
+                RecommendedStartMode = WinCheckServiceStartMode.Disabled,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 5 * 1024 * 1024
             },
@@ -579,7 +579,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "SensrSvc",
                 DisplayName = "Sensor Service",
                 Reason = "Only needed for devices with sensors.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 8 * 1024 * 1024
             },
@@ -590,7 +590,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "Themes",
                 DisplayName = "Themes",
                 Reason = "Only disable if using classic theme for performance.",
-                RecommendedStartMode = ServiceStartMode.Automatic,
+                RecommendedStartMode = WinCheckServiceStartMode.Automatic,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 10 * 1024 * 1024
             },
@@ -601,7 +601,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "wisvc",
                 DisplayName = "Windows Insider Service",
                 Reason = "Only needed for Windows Insider Program.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Safe,
                 EstimatedMemorySavingBytes = 5 * 1024 * 1024
             },
@@ -612,7 +612,7 @@ public class ServiceOptimizerService : IServiceOptimizerService
                 ServiceName = "WpcMonSvc",
                 DisplayName = "Parental Controls",
                 Reason = "Only needed if using parental controls.",
-                RecommendedStartMode = ServiceStartMode.Manual,
+                RecommendedStartMode = WinCheckServiceStartMode.Manual,
                 Safety = SafetyLevel.Conditional,
                 EstimatedMemorySavingBytes = 12 * 1024 * 1024
             }

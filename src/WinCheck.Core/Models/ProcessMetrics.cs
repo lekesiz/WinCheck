@@ -87,7 +87,8 @@ public enum RecommendedAction
     LowerPriority,  // Önceliği düşür
     Throttle,       // CPU/IO sınırla
     Terminate,      // Sonlandır
-    Quarantine      // Karantinaya al ve scan et
+    Quarantine,     // Karantinaya al ve scan et
+    Block           // Network bağlantısını engelle
 }
 
 public class SystemResourceUsage

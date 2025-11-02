@@ -50,6 +50,12 @@
                     <FontIcon Glyph="&#xE8B7;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
+
+            <NavigationViewItem Content="Settings" Tag="Settings">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE713;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />

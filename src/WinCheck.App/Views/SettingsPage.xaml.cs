@@ -13,5 +13,8 @@ public sealed partial class SettingsPage : Page
         ViewModel = App.Services.GetRequiredService<SettingsViewModel>();
         InitializeComponent();
         DataContext = ViewModel;
+
+        // Load settings when page is opened
+        _ = ViewModel.LoadSettingsCommand.ExecuteAsync(null);
     }
 }

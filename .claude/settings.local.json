@@ -26,7 +26,8 @@
       "Bash(Views/DiskCleanupPage.xaml)",
       "Bash(Views/ServiceOptimizerPage.xaml)",
       "Bash(Views/StartupManagerPage.xaml)",
-      "Bash(Views/RegistryCleanerPage.xaml)"
+      "Bash(Views/RegistryCleanerPage.xaml)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []

@@ -31,6 +31,7 @@ public sealed partial class MainWindow : Window
                 "ServiceOptimizer" => typeof(ServiceOptimizerPage),
                 "StartupManager" => typeof(StartupManagerPage),
                 "RegistryCleaner" => typeof(RegistryCleanerPage),
+                "Settings" => typeof(SettingsPage),
                 _ => typeof(DashboardPage)
             };
 

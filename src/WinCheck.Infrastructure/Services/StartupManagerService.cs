@@ -21,22 +21,72 @@ public class StartupManagerService : IStartupManagerService
         {
             try
             {
-                // Scan registry Run keys
-                programs.AddRange(GetRegistryStartupPrograms());
-            }
-            catch { }
+                // ONLY scan registry Run keys - most stable
+                var runPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 
-            try
-            {
-                // Scan Startup folder
-                programs.AddRange(GetStartupFolderPrograms());
-            }
-            catch { }
+                // Current User
+                try
+                {
+                    using var key = Registry.CurrentUser.OpenSubKey(runPath);
+                    if (key != null)
+                    {
+                        foreach (var valueName in key.GetValueNames())
+                        {
+                            try
+                            {
+                                var command = key.GetValue(valueName)?.ToString();
+                                if (!string.IsNullOrEmpty(command))
+                                {
+                                    programs.Add(new StartupProgram
+                                    {
+                                        Name = valueName,
+                                        Command = command,
+                                        Location = StartupLocation.RegistryRun,
+                                        IsEnabled = true,
+                                        Publisher = "Unknown",
+                                        IsSigned = false,
+                                        Impact = StartupImpact.Medium,
+                                        EstimatedDelayMs = 1000
+                                    });
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                catch { }
 
-            try
-            {
-                // Scan Task Scheduler
-                programs.AddRange(GetTaskSchedulerPrograms());
+                // Local Machine
+                try
+                {
+                    using var key = Registry.LocalMachine.OpenSubKey(runPath);
+                    if (key != null)
+                    {
+                        foreach (var valueName in key.GetValueNames())
+                        {
+                            try
+                            {
+                                var command = key.GetValue(valueName)?.ToString();
+                                if (!string.IsNullOrEmpty(command))
+                                {
+                                    programs.Add(new StartupProgram
+                                    {
+                                        Name = valueName,
+                                        Command = command,
+                                        Location = StartupLocation.RegistryRun,
+                                        IsEnabled = true,
+                                        Publisher = "Unknown",
+                                        IsSigned = false,
+                                        Impact = StartupImpact.Medium,
+                                        EstimatedDelayMs = 1000
+                                    });
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                catch { }
             }
             catch { }
         });

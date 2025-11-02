@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCheck.Tests", "tests\Win
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCheck.IntegrationTests", "tests\WinCheck.IntegrationTests\WinCheck.IntegrationTests.csproj", "{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -91,11 +93,28 @@ Global
 		{D548C7CE-7270-40DA-8182-8479B174E274}.Release|x86.Build.0 = Release|x86
 		{D548C7CE-7270-40DA-8182-8479B174E274}.Release|Any CPU.ActiveCfg = Release|x64
 		{D548C7CE-7270-40DA-8182-8479B174E274}.Release|Any CPU.Build.0 = Release|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|ARM64.Build.0 = Debug|ARM64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|x64.ActiveCfg = Debug|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|x64.Build.0 = Debug|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|x86.ActiveCfg = Debug|x86
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|x86.Build.0 = Debug|x86
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Debug|Any CPU.Build.0 = Debug|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|ARM64.ActiveCfg = Release|ARM64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|ARM64.Build.0 = Release|ARM64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|x64.ActiveCfg = Release|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|x64.Build.0 = Release|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|x86.ActiveCfg = Release|x86
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|x86.Build.0 = Release|x86
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|Any CPU.ActiveCfg = Release|x64
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4}.Release|Any CPU.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D548C7CE-7270-40DA-8182-8479B174E274} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{8C4A70C0-EE42-4D0B-921A-F8E959F3E6B4} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

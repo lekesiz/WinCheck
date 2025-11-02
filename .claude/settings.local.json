@@ -27,7 +27,18 @@
       "Bash(Views/ServiceOptimizerPage.xaml)",
       "Bash(Views/StartupManagerPage.xaml)",
       "Bash(Views/RegistryCleanerPage.xaml)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" \"C:\\Users\\mikai\\Desktop\\wincheck\\WinCheck.sln\" /p:Configuration=Debug /p:Platform=x64 /v:minimal)",
+      "Bash(dotnet msbuild:*)",
+      "Bash($null)",
+      "Bash(Select-String -Pattern \"error|warning|succeeded|failed\")",
+      "Bash(nul)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet add reference:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(Select-Object -Last 30)",
+      "Bash(dotnet add package:*)"
     ],
     "deny": [],
     "ask": []

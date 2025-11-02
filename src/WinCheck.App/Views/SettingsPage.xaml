@@ -1,0 +1,10 @@
+<Page
+    x:Class="WinCheck.App.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Padding="24">
+        <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+        <TextBlock Text="Settings options coming soon..." Margin="0,16,0,0" />
+    </StackPanel>
+</Page>

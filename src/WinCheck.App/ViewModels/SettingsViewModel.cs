@@ -25,6 +25,12 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private AIProviderType _selectedAIProvider = AIProviderType.OpenAI;
 
+    public int SelectedProviderIndex
+    {
+        get => (int)SelectedAIProvider;
+        set => SelectedAIProvider = (AIProviderType)value;
+    }
+
     [ObservableProperty]
     private string _openAIApiKey = string.Empty;
 

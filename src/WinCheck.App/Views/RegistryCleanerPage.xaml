@@ -1,1 +1,176 @@
-<Page x:Class="WinCheck.App.Views.RegistryCleanerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"><StackPanel Padding="24"><TextBlock Text="RegistryCleaner" Style="{StaticResource TitleTextBlockStyle}" /><TextBlock Text="Coming soon..." Margin="0,16,0,0" /></StackPanel></Page>
+<Page
+    x:Class="WinCheck.App.Views.RegistryCleanerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer>
+        <StackPanel Padding="24" Spacing="24">
+            <!-- Header Section -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Registry Cleaner" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Scan and fix registry issues to improve system stability"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Summary Cards -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Total Issues" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.TotalIssues, Mode=OneWay}"
+                                  Style="{StaticResource HeaderTextBlockStyle}"
+                                  Foreground="{ThemeResource SystemAccentColor}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="High Severity" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.HighSeverityCount, Mode=OneWay}"
+                                  Style="{StaticResource HeaderTextBlockStyle}"
+                                  Foreground="#DC3545" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Medium Severity" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.MediumSeverityCount, Mode=OneWay}"
+                                  Style="{StaticResource HeaderTextBlockStyle}"
+                                  Foreground="#FFC107" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="3"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Selected" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.SelectedIssuesCount, Mode=OneWay}"
+                                  Style="{StaticResource HeaderTextBlockStyle}"
+                                  Foreground="{ThemeResource SystemAccentColor}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Control Buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="Scan Registry"
+                       Command="{x:Bind ViewModel.ScanRegistryCommand}"
+                       Style="{StaticResource AccentButtonStyle}" />
+
+                <Button Content="Clean Selected"
+                       Command="{x:Bind ViewModel.CleanRegistryCommand}" />
+
+                <Button Content="Restore Backup"
+                       Command="{x:Bind ViewModel.RestoreBackupCommand}" />
+
+                <CheckBox Content="Select All"
+                         IsChecked="{x:Bind ViewModel.SelectAll, Mode=TwoWay}"
+                         Command="{x:Bind ViewModel.ToggleSelectAllCommand}"
+                         Margin="8,0,0,0" />
+            </StackPanel>
+
+            <!-- Status Message -->
+            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                      Foreground="{ThemeResource SystemAccentColor}"
+                      TextWrapping="Wrap" />
+
+            <!-- Registry Issues List -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Registry Issues" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <ListView ItemsSource="{x:Bind ViewModel.Issues, Mode=OneWay}"
+                         SelectionMode="None"
+                         MaxHeight="500">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                         IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                         VerticalAlignment="Top"
+                                         Margin="0,8,12,0" />
+
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{Binding TypeText}" FontWeight="SemiBold" />
+                                        <Border Background="{Binding SeverityColor}"
+                                               CornerRadius="4"
+                                               Padding="6,2">
+                                            <TextBlock Text="{Binding SeverityText}"
+                                                      Foreground="White"
+                                                      FontSize="11"
+                                                      FontWeight="SemiBold" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding Issue.Description}"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              TextWrapping="Wrap" />
+
+                                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                              FontSize="11">
+                                        <Run Text="Key:" />
+                                        <Run Text="{Binding KeyPathShort}" />
+                                    </TextBlock>
+
+                                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                              FontSize="11">
+                                        <Run Text="Fixable:" />
+                                        <Run Text="{Binding FixableText}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+
+            <!-- Warning Box -->
+            <StackPanel Spacing="8"
+                       Background="{ThemeResource LayerFillColorDefaultBrush}"
+                       Padding="16"
+                       CornerRadius="8">
+                <TextBlock Text="⚠️ Warning" FontWeight="SemiBold" Foreground="#FFC107" />
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    Registry cleaning modifies system configuration. A backup is automatically created before cleaning. Only fix issues you understand.
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

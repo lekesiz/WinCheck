@@ -103,21 +103,22 @@
                     Style="{StaticResource SubtitleTextBlockStyle}" />
 
                 <StackPanel Orientation="Horizontal" Spacing="12">
-                    <Button Style="{StaticResource AccentButtonStyle}">
+                    <Button Command="{x:Bind ViewModel.QuickScanCommand}"
+                           Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE74D;" FontSize="16" />
-                            <TextBlock Text="Quick Clean" />
+                            <TextBlock Text="Quick Scan" />
                         </StackPanel>
                     </Button>
 
-                    <Button>
+                    <Button Command="{x:Bind ViewModel.DeepScanCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE721;" FontSize="16" />
                             <TextBlock Text="Deep Scan" />
                         </StackPanel>
                     </Button>
 
-                    <Button>
+                    <Button Command="{x:Bind ViewModel.OptimizeCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE713;" FontSize="16" />
                             <TextBlock Text="Optimize" />

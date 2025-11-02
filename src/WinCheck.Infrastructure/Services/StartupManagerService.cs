@@ -376,32 +376,50 @@ public class StartupManagerService : IStartupManagerService
 
         try
         {
-            // Query Task Scheduler via WMI
-            using var searcher = new ManagementObjectSearcher(@"root\Microsoft\Windows\TaskScheduler", "SELECT * FROM MSFT_ScheduledTask");
-
-            foreach (ManagementObject task in searcher.Get())
+            // Use schtasks command instead of WMI for better stability
+            var startInfo = new ProcessStartInfo
             {
-                try
+                FileName = "schtasks",
+                Arguments = "/Query /FO CSV /V",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var process = Process.Start(startInfo);
+            if (process != null)
+            {
+                var output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                var lines = output.Split('\n');
+                foreach (var line in lines.Skip(1)) // Skip header
                 {
-                    var taskName = task["TaskName"]?.ToString();
-                    var state = task["State"]?.ToString();
-
-                    // Only include tasks that run at startup
-                    var triggers = task["Triggers"] as ManagementBaseObject[];
-                    if (triggers != null && triggers.Any(t => t["Type"]?.ToString() == "Boot" || t["Type"]?.ToString() == "Logon"))
+                    try
                     {
-                        var program = new StartupProgram
+                        var parts = line.Split(',');
+                        if (parts.Length > 1)
                         {
-                            Name = taskName ?? "Unknown Task",
-                            Location = StartupLocation.TaskScheduler,
-                            IsEnabled = state == "Ready" || state == "Running"
-                        };
+                            var taskName = parts[0].Trim('"');
+                            var status = parts.Length > 3 ? parts[3].Trim('"') : "";
 
-                        AnalyzeProgram(program);
-                        programs.Add(program);
+                            // Basic filter for startup tasks
+                            if (!string.IsNullOrEmpty(taskName) && taskName.Contains("Startup", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var program = new StartupProgram
+                                {
+                                    Name = taskName,
+                                    Location = StartupLocation.TaskScheduler,
+                                    IsEnabled = status.Contains("Ready", StringComparison.OrdinalIgnoreCase),
+                                    Command = "" // Will be populated if needed
+                                };
+
+                                programs.Add(program);
+                            }
+                        }
                     }
+                    catch { }
                 }
-                catch { }
             }
         }
         catch { }

@@ -103,22 +103,25 @@
                     Style="{StaticResource SubtitleTextBlockStyle}" />
 
                 <StackPanel Orientation="Horizontal" Spacing="12">
-                    <Button Content="Quick Clean" Style="{StaticResource AccentButtonStyle}">
-                        <Button.Icon>
-                            <FontIcon Glyph="&#xE74D;" />
-                        </Button.Icon>
+                    <Button Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE74D;" FontSize="16" />
+                            <TextBlock Text="Quick Clean" />
+                        </StackPanel>
                     </Button>
 
-                    <Button Content="Deep Scan">
-                        <Button.Icon>
-                            <FontIcon Glyph="&#xE721;" />
-                        </Button.Icon>
+                    <Button>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE721;" FontSize="16" />
+                            <TextBlock Text="Deep Scan" />
+                        </StackPanel>
                     </Button>
 
-                    <Button Content="Optimize">
-                        <Button.Icon>
-                            <FontIcon Glyph="&#xE713;" />
-                        </Button.Icon>
+                    <Button>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE713;" FontSize="16" />
+                            <TextBlock Text="Optimize" />
+                        </StackPanel>
                     </Button>
                 </StackPanel>
             </StackPanel>

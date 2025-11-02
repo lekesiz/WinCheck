@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet clean:*)",
+      "Bash(cat:*)",
+      "Bash(\"C:\\Users\\mikai\\.nuget\\packages\\microsoft.windowsappsdk\\1.5.250108004\\tools\\net472\\XamlCompiler.exe\" \"obj\\x64\\Debug\\net8.0-windows10.0.22621.0\\input.json\" \"obj\\x64\\Debug\\net8.0-windows10.0.22621.0\\output.json\")",
+      "Bash(msbuild:*)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" \"C:\\Users\\mikai\\Desktop\\wincheck\\WinCheck.sln\" /p:Configuration=Debug /p:Platform=x64 /t:Restore /v:minimal)",
+      "Bash(powershell:*)",
+      "Bash(dotnet workload:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet publish:*)",
+      "Bash(Select-String -Pattern \"error|warning|->|succeeded|failed\")",
+      "Bash(Select-Object -Last 20)",
+      "Bash(findstr:*)",
+      "Bash(start WinCheck.App.exe)",
+      "Bash(.gitignore)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

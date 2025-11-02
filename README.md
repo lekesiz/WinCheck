@@ -320,3 +320,879 @@ Contributions are welcome! Please read CONTRIBUTING.md
 - GitHub Issues: [project-url]/issues
 - Email: support@wincheck.app
 - Documentation: https://docs.wincheck.app
+
+---
+
+# User Manual & Configuration Guide
+
+## 🔧 Initial Setup
+
+### 1. AI Provider Configuration (Required)
+
+WinCheck requires at least one AI provider API key to function. Navigate to **Settings** page in the application.
+
+#### OpenAI Setup
+1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Create account or sign in
+3. Generate a new API key
+4. Copy the key (starts with `sk-`)
+5. In WinCheck Settings:
+   - Paste key in **OpenAI API Key** field
+   - Click **Validate** button
+   - Wait for green checkmark ✅
+   - Select **OpenAI** as AI Provider
+
+#### Claude (Anthropic) Setup
+1. Visit [Anthropic Console](https://console.anthropic.com/)
+2. Create account or sign in
+3. Generate API key
+4. Copy the key
+5. In WinCheck Settings:
+   - Paste key in **Claude API Key** field
+   - Click **Validate** button
+   - Wait for green checkmark ✅
+   - Select **Claude** as AI Provider
+
+#### Gemini (Google) Setup
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create account or sign in
+3. Generate API key
+4. Copy the key
+5. In WinCheck Settings:
+   - Paste key in **Gemini API Key** field
+   - Click **Validate** button
+   - Wait for green checkmark ✅
+   - Select **Gemini** as AI Provider
+
+**Settings Location**: `%LocalAppData%\WinCheck\settings.json`
+
+### 2. First Run Recommendations
+
+After configuring AI provider:
+
+1. **Dashboard** → Click **Deep Scan**
+   - Establishes system baseline
+   - Takes 1-3 minutes
+   - Provides comprehensive health score (0-100)
+   - Generates initial recommendations
+
+2. **Review Recommendations**
+   - Read all AI-generated suggestions
+   - Note priority levels: Critical > High > Medium > Low
+   - Check estimated impact scores
+
+3. **Disk Cleanup** → Click **Scan**
+   - See how much space can be freed
+   - Review cleanup categories
+   - Run **Clean** if comfortable with findings
+
+4. **Startup Manager** → Click **Load Programs**
+   - Identify high-impact startup programs
+   - Disable unnecessary programs (reduces boot time)
+
+---
+
+## 📖 Feature Guide
+
+### Dashboard Page
+
+**Purpose**: Central hub for AI-powered system analysis and optimization
+
+#### Quick Scan
+- **Duration**: 10-30 seconds
+- **What it does**:
+  - Analyzes current CPU, memory, disk usage
+  - Checks running processes
+  - Generates health score (0-100)
+  - Lists top 5 recommendations
+- **Best for**: Daily health checks
+
+#### Deep Scan
+- **Duration**: 1-3 minutes
+- **What it does**:
+  - Comprehensive hardware analysis (CPU, GPU, RAM, disk)
+  - Software analysis (installed programs, services)
+  - Performance analysis (resource usage patterns)
+  - Security analysis (suspicious processes, network threats)
+  - Generates detailed breakdown:
+    - Hardware Score (0-100)
+    - Software Score (0-100)
+    - Performance Score (0-100)
+    - Security Score (0-100)
+  - Lists ALL recommendations with impact estimates
+- **Best for**: Weekly/monthly thorough analysis
+
+#### Optimize Button
+- **Duration**: 30 seconds - 5 minutes (varies)
+- **What it does**:
+  1. AI generates custom optimization plan
+  2. Shows estimated improvement (+X health score)
+  3. Executes safe optimization steps
+  4. Reports results:
+     - Steps completed/failed
+     - Actual health score increase
+     - Time saved
+- **Includes**:
+  - Service optimization
+  - Startup program cleanup
+  - Disk cleanup
+  - Registry cleaning
+  - Network optimization
+- **Safety**: All changes create automatic backups
+
+#### Ask AI Question
+- **How to use**:
+  1. Type question in text box
+  2. Click **Ask AI**
+  3. Wait for AI response
+- **Example questions**:
+  - "Why is my CPU usage so high?"
+  - "Is 8GB RAM enough for gaming?"
+  - "Should I upgrade my SSD?"
+  - "What's causing slow boot time?"
+  - "Is this process safe to terminate?"
+
+---
+
+### Process Monitor Page
+
+**Purpose**: Real-time monitoring and management of running processes
+
+#### Start Monitoring
+- **Updates**: Every 2 seconds
+- **Shows**:
+  - Process name
+  - CPU usage (%)
+  - Memory usage (MB)
+  - Disk read/write (MB)
+  - Network sent/received (MB)
+  - Thread count
+  - Handle count
+  - Impact score (0-100)
+- **Process limit**: Top 50 by CPU usage
+- **System metrics**: Overall CPU, memory, disk usage displayed at top
+
+#### Suspicious Process Detection
+- **Automatic**: Runs when monitoring starts
+- **Detection criteria**:
+  - 🔴 **High CPU** (>80% for extended time)
+  - 🔴 **High Memory** (>50% of system RAM)
+  - 🟡 **Unsigned executable** (no digital signature)
+  - 🟡 **Suspicious location** (Temp, AppData, hidden folders)
+  - 🟠 **Excessive disk I/O**
+  - 🟠 **Network spamming**
+  - 🟠 **Multiple instances** (same process repeated)
+  - ⚫ **Known malware signature**
+
+- **Recommended actions**:
+  - **Monitor**: Keep watching, no immediate threat
+  - **Lower Priority**: Reduce CPU priority
+  - **Throttle**: Limit CPU/IO usage
+  - **Terminate**: End process immediately
+  - **Quarantine**: Stop and scan with antivirus
+  - **Block**: Cut network connection
+
+#### Terminate Process
+1. Select process from list
+2. Click **Terminate Process**
+3. Confirm action
+4. **Note**: Requires administrator for system processes
+
+---
+
+### Disk Cleanup Page
+
+**Purpose**: Analyze and clean unnecessary files to free disk space
+
+#### Scan
+- **Analyzes**:
+  - ✅ **Temp Files** (Safe)
+    - `%TEMP%` folder
+    - `C:\Windows\Temp`
+    - `.NET temp files`
+  - ✅ **Browser Caches** (Safe)
+    - Chrome cache
+    - Edge cache
+    - Firefox cache
+  - 🟡 **Windows Update Cache** (Mostly Safe, requires admin)
+    - `C:\Windows\SoftwareDistribution`
+  - ✅ **Recycle Bin** (Safe)
+  - ✅ **Thumbnails** (Safe)
+    - `%LocalAppData%\Microsoft\Windows\Explorer`
+  - ✅ **Error Reports** (Safe)
+    - Windows Error Reporting logs
+  - ✅ **Log Files** (Safe)
+    - System and application logs
+
+- **Shows per category**:
+  - Size (MB/GB)
+  - File count
+  - Safety level
+
+- **Total Cleanable**: Sum of all categories
+
+#### Clean
+- **Process**:
+  1. Deletes temporary files
+  2. Clears browser caches
+  3. Cleans Windows Update cache (if admin)
+  4. Empties recycle bin
+  5. Shows total space freed
+- **Safety**: Only targets well-known safe locations
+- **Skips**: Files in use by running programs
+
+#### Safety Levels
+- 🟢 **Safe**: 100% safe to delete, no data loss
+- 🟡 **Mostly Safe**: Safe but may clear cached data
+- 🟠 **Careful**: Review before deleting
+- 🔴 **Advanced**: Only for advanced users
+
+---
+
+### Service Optimizer Page
+
+**Purpose**: Manage Windows services to improve boot time and performance
+
+#### Load Services
+- **Shows all Windows services**:
+  - Service name
+  - Display name
+  - Current status (Running/Stopped)
+  - Startup type (Automatic/Manual/Disabled)
+  - Impact on system (High/Medium/Low)
+  - Safe to disable? (Yes/No)
+
+#### Optimize
+- **Automatic optimization**:
+  1. Identifies safe-to-disable services
+  2. Creates backup of current configuration
+  3. Changes startup type to "Manual" or "Disabled"
+  4. Shows results:
+     - Services optimized
+     - Estimated boot time savings
+     - Memory saved
+
+- **Database of 30+ services** including:
+  - Windows Search (high memory usage)
+  - Superfetch/Prefetch
+  - Remote Registry
+  - Print Spooler (if no printer)
+  - Bluetooth Support Service (if no Bluetooth)
+  - Windows Error Reporting
+  - And more...
+
+#### Create Backup
+- **Manual backup**:
+  1. Click **Create Backup**
+  2. Backup saved to: `%LocalAppData%\WinCheck\Backups\services_YYYYMMDD_HHMMSS.reg`
+  3. Confirmation message shown
+
+#### Restore Backup
+- **Restore previous configuration**:
+  1. Click **Restore Backup**
+  2. Select backup file
+  3. Services restored to previous state
+  4. Requires restart for full effect
+
+**Safety**: All changes create automatic backup. Can be reverted anytime.
+
+---
+
+### Startup Manager Page
+
+**Purpose**: Control programs that run at Windows startup
+
+#### Load Programs
+- **Scans three locations**:
+  1. **Registry Run keys**:
+     - `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`
+     - `HKEY_LOCAL_MACHINE\...\Run`
+  2. **Startup folder**:
+     - `%AppData%\Microsoft\Windows\Start Menu\Programs\Startup`
+  3. **Task Scheduler**:
+     - Tasks set to run at logon
+
+- **Shows per program**:
+  - Name
+  - Location (Registry/Folder/Task)
+  - Executable path
+  - Publisher (if signed)
+  - Enabled/Disabled status
+  - Impact score (0-100):
+    - 🔴 **High** (>70): Significantly delays boot
+    - 🟡 **Medium** (40-70): Moderate impact
+    - 🟢 **Low** (<40): Minimal impact
+
+#### Enable/Disable Programs
+1. Select program from list
+2. Click **Enable** or **Disable**
+3. Change takes effect on next boot
+
+#### Impact Score Calculation
+- File size
+- Dependencies (DLLs loaded)
+- Historical boot time data
+- Resource usage patterns
+
+**Common bloatware** auto-detected:
+- Adobe updaters
+- Java updaters
+- Manufacturer bloatware (HP, Dell utilities)
+- Chat apps (Discord, Skype auto-start)
+- Cloud sync services (if multiple running)
+
+---
+
+### Registry Cleaner Page
+
+**Purpose**: Safely clean invalid Windows registry entries
+
+#### Scan Registry
+- **Checks for**:
+  - ❌ **Invalid file extensions** (orphaned HKEY_CLASSES_ROOT entries)
+  - ❌ **Obsolete software entries** (uninstalled programs)
+  - ❌ **Broken shortcuts** (LNK files pointing nowhere)
+  - ❌ **Empty registry keys**
+  - ❌ **Invalid startup entries**
+  - ❌ **Outdated MUI cache**
+
+- **Shows**:
+  - Issue count per category
+  - Registry paths affected
+  - Estimated space wasted
+
+#### Clean Registry
+1. Click **Clean Registry**
+2. **Automatic backup created**: `%LocalAppData%\WinCheck\Backups\registry_YYYYMMDD_HHMMSS.reg`
+3. Invalid entries removed
+4. Results shown:
+   - Issues fixed
+   - Registry keys cleaned
+   - Backup location
+
+#### Restore Registry
+- **If something goes wrong**:
+  1. Click **Restore Backup**
+  2. Select backup `.reg` file
+  3. Click **Import**
+  4. Registry restored to previous state
+
+**Safety Features**:
+- Whitelist approach (only touches known-safe areas)
+- Never modifies critical system keys
+- Always creates backup before cleaning
+- Skips entries with active dependencies
+
+**When to use**:
+- After uninstalling many programs
+- System feels sluggish
+- Registry errors in Event Viewer
+- Monthly maintenance
+
+---
+
+## 🎯 Usage Scenarios
+
+### Scenario 1: New PC Setup
+**Goal**: Optimize brand new computer out of the box
+
+1. **Dashboard** → Deep Scan
+   - See baseline health score
+   - Identify pre-installed bloatware
+
+2. **Startup Manager** → Load Programs
+   - Disable manufacturer bloatware
+   - Keep only essential startup programs
+
+3. **Service Optimizer** → Optimize
+   - Disable unnecessary services
+   - Improve boot time by 30-50%
+
+4. **Dashboard** → Deep Scan (again)
+   - Compare new vs. old health score
+   - Should see +10 to +20 improvement
+
+### Scenario 2: Computer Running Slow
+**Goal**: Diagnose and fix performance issues
+
+1. **Dashboard** → Ask AI
+   - "Why is my computer slow?"
+   - Get AI analysis
+
+2. **Process Monitor** → Start Monitoring
+   - Identify high CPU/memory processes
+   - Check for suspicious processes
+   - Terminate resource hogs
+
+3. **Disk Cleanup** → Scan & Clean
+   - Free up disk space
+   - May improve performance if disk was >90% full
+
+4. **Dashboard** → Optimize
+   - Execute AI-generated optimization plan
+
+### Scenario 3: Running Out of Disk Space
+**Goal**: Free up maximum disk space
+
+1. **Disk Cleanup** → Scan
+   - See all cleanable categories
+   - Note total cleanable space
+
+2. **Disk Cleanup** → Clean
+   - Remove all temporary files
+   - Empty recycle bin
+
+3. **Dashboard** → Ask AI
+   - "What's taking up most disk space?"
+   - Get recommendations for manual cleanup
+
+### Scenario 4: Suspicious Activity
+**Goal**: Check for malware or suspicious processes
+
+1. **Process Monitor** → Start Monitoring
+   - Wait for suspicious process detection
+   - Review flagged processes
+
+2. **Dashboard** → Deep Scan
+   - Check security score
+   - Review security recommendations
+
+3. **Process Monitor** → Terminate suspicious processes
+   - End high-risk processes
+   - Run antivirus scan separately
+
+### Scenario 5: Weekly Maintenance
+**Goal**: Keep system in optimal condition
+
+1. **Dashboard** → Quick Scan (every week)
+   - Monitor health score trend
+   - Check for new recommendations
+
+2. **Disk Cleanup** → Scan (if score drops)
+   - Free up space if needed
+
+3. **Process Monitor** → Brief check
+   - Verify no suspicious processes
+
+### Scenario 6: Monthly Deep Maintenance
+**Goal**: Comprehensive system optimization
+
+1. **Dashboard** → Deep Scan
+2. **Service Optimizer** → Create Backup, then Optimize
+3. **Startup Manager** → Review and disable new entries
+4. **Registry Cleaner** → Scan & Clean
+5. **Disk Cleanup** → Scan & Clean
+6. **Dashboard** → Deep Scan (compare results)
+
+---
+
+## ⚠️ Troubleshooting
+
+### Application Won't Start
+
+**Symptom**: Double-click WinCheck.App.exe, nothing happens
+
+**Solutions**:
+1. Check .NET 8.0 Runtime installed:
+   ```powershell
+   dotnet --list-runtimes
+   ```
+   - Should show: `Microsoft.WindowsDesktop.App 8.0.x`
+   - If missing: [Download .NET 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+2. Verify Windows version:
+   - Press Win+R → `winver`
+   - Must be Windows 10 22H2 (19045) or later
+
+3. Run as administrator:
+   - Right-click WinCheck.App.exe
+   - Select "Run as administrator"
+
+4. Check Event Viewer:
+   - Win+R → `eventvwr`
+   - Windows Logs → Application
+   - Look for WinCheck errors
+
+---
+
+### "AI Provider Error" on Dashboard
+
+**Symptom**: Dashboard shows "Failed to analyze system. Please check AI provider settings."
+
+**Solutions**:
+1. Verify API key:
+   - Settings → Check API key entered correctly
+   - Click **Validate** button
+   - Must show green ✅ checkmark
+
+2. Check internet connection:
+   ```powershell
+   ping api.openai.com
+   ```
+
+3. Verify API key has credits/quota:
+   - OpenAI: Check [Usage](https://platform.openai.com/usage)
+   - Claude: Check Anthropic console
+   - Gemini: Check Google AI Studio
+
+4. Try different AI provider:
+   - Settings → Switch to Claude or Gemini
+   - Click **Validate**
+
+5. Check firewall:
+   - Ensure WinCheck.App.exe allowed through firewall
+
+---
+
+### Disk Cleanup Shows 0 MB
+
+**Symptom**: Scan completes but finds nothing to clean
+
+**Solutions**:
+1. Run as administrator (required for some folders)
+2. Disk may already be very clean
+3. Check antivirus isn't blocking file access:
+   - Temporarily disable antivirus
+   - Scan again
+   - Re-enable antivirus
+
+---
+
+### Service Optimizer Shows Empty List
+
+**Symptom**: Load Services button does nothing, list stays empty
+
+**Solutions**:
+1. Run as administrator (required for service access)
+2. Verify Services.msc opens manually:
+   - Win+R → `services.msc`
+3. Restart application
+
+---
+
+### Process Monitor Not Updating
+
+**Symptom**: Process list frozen, no updates
+
+**Solutions**:
+1. Click **Stop Monitoring** → **Start Monitoring**
+2. Check performance counters enabled:
+   - Win+R → `perfmon`
+   - Should open without errors
+3. Run as administrator
+4. Restart application
+
+---
+
+### Settings Not Saving
+
+**Symptom**: API keys disappear after closing application
+
+**Solutions**:
+1. Check folder permissions:
+   - Navigate to `%LocalAppData%\WinCheck`
+   - Right-click → Properties → Security
+   - Ensure your user has "Modify" permission
+
+2. Check folder isn't read-only:
+   - Right-click WinCheck folder → Properties
+   - Uncheck "Read-only"
+
+3. Run as administrator
+
+4. Check antivirus isn't blocking:
+   - Add WinCheck folder to antivirus exclusions
+
+---
+
+### High CPU Usage During Scan
+
+**Symptom**: WinCheck using 50-80% CPU during Deep Scan
+
+**This is normal**:
+- Deep Scan analyzes all system components
+- CPU usage returns to <5% after scan
+- Duration: 1-3 minutes typically
+
+**If persists after scan**:
+1. Stop Process Monitor if running
+2. Restart application
+3. Use Quick Scan instead
+
+---
+
+### "Access Denied" Errors
+
+**Symptom**: Various features show "Access Denied" errors
+
+**Solutions**:
+1. Run as administrator (most common fix)
+2. Check UAC settings:
+   - Win+R → `UserAccountControlSettings`
+   - Set to at least "Notify me only when apps try to make changes"
+
+3. Verify user account has admin rights
+
+---
+
+## 📊 Understanding Health Scores
+
+### Overall Health Score (0-100)
+- **Weighted average** of 4 categories:
+  - Hardware: 25%
+  - Software: 25%
+  - Performance: 30%
+  - Security: 20%
+
+### Score Interpretation
+- **90-100**: Excellent - System in optimal condition
+- **75-89**: Good - Minor optimizations possible
+- **60-74**: Fair - Noticeable issues, optimization recommended
+- **40-59**: Poor - Significant problems, action required
+- **0-39**: Critical - Urgent attention needed
+
+### Hardware Score Factors
+- CPU health and temperature
+- RAM integrity
+- Disk SMART status and fragmentation
+- GPU health (if discrete GPU present)
+- Battery health (laptops)
+
+### Software Score Factors
+- Number of installed programs
+- Outdated software
+- Bloatware detection
+- Startup program count
+- Service configuration
+
+### Performance Score Factors
+- CPU usage patterns
+- Memory usage
+- Disk usage and speed
+- Boot time
+- System responsiveness
+
+### Security Score Factors
+- Suspicious processes detected
+- Network threat count
+- Windows Defender status
+- Firewall configuration
+- Outdated drivers/software
+
+---
+
+## 🔐 Privacy & Security
+
+### Data Sent to AI Providers
+
+When using AI features, the following data is transmitted:
+
+**Sent**:
+- System metrics (CPU %, RAM %, disk usage)
+- Process names (e.g., "chrome.exe", "notepad.exe")
+- Installed software names and versions
+- Hardware specifications (CPU model, RAM size, GPU model)
+- Service names and startup programs
+- Aggregate statistics
+
+**NOT sent**:
+- File contents or file paths
+- Personal documents or user files
+- Passwords or credentials
+- Browsing history
+- Network traffic contents
+- Usernames or personal identifiers
+- IP addresses
+
+### Local Data Storage
+
+- **Settings**: `%LocalAppData%\WinCheck\settings.json`
+  - AI provider selection
+  - API keys (stored locally only)
+  - Monitoring preferences
+  - Permissions: Current user only
+
+- **Backups**: `%LocalAppData%\WinCheck\Backups\`
+  - Service configurations (.reg files)
+  - Registry backups (.reg files)
+  - Permissions: Current user only
+
+### API Key Security
+
+- API keys stored in plain text JSON file
+- File permissions restricted to current user
+- Keys never transmitted except to respective AI provider
+- Keys not logged or sent to telemetry
+- **Recommendation**: Use API keys with limited spending caps
+
+### Network Connections
+
+WinCheck makes network connections to:
+1. **AI Provider APIs** (based on selection):
+   - `api.openai.com` (OpenAI)
+   - `api.anthropic.com` (Claude)
+   - `generativelanguage.googleapis.com` (Gemini)
+2. **No other external connections**
+
+### Administrator Privileges
+
+Required for:
+- Service modification
+- Registry editing
+- Windows Update cache cleanup
+- System process termination
+- SMART disk data access
+
+**Not required for**:
+- AI analysis
+- Process monitoring (limited visibility)
+- Disk cleanup (user folders only)
+- Viewing recommendations
+
+---
+
+## 📈 Performance Tips
+
+### Optimizing WinCheck Performance
+
+1. **Close unused features**:
+   - Stop Process Monitor when not needed
+   - Use Quick Scan for routine checks
+
+2. **Reduce monitoring frequency**:
+   - Settings → Increase monitoring interval
+
+3. **Limit startup impact**:
+   - Don't add WinCheck to startup programs
+   - Run manually when needed
+
+### Optimizing Your System with WinCheck
+
+#### First-Time Setup (30 minutes)
+1. Dashboard → Deep Scan (baseline)
+2. Startup Manager → Disable bloatware (saves 30-60 seconds boot time)
+3. Service Optimizer → Optimize (saves 10-30 seconds boot time)
+4. Disk Cleanup → Clean (frees 5-20 GB typically)
+5. Dashboard → Deep Scan (compare improvement)
+
+**Expected results**:
+- Health score: +15 to +30
+- Boot time: -40 to -90 seconds
+- Free disk space: +5 to +20 GB
+- Memory usage: -200 to -500 MB
+
+#### Weekly Quick Maintenance (5 minutes)
+1. Dashboard → Quick Scan
+2. Review recommendations
+3. Disk Cleanup (if recommended)
+
+#### Monthly Deep Maintenance (20 minutes)
+1. Dashboard → Deep Scan
+2. Service Optimizer → Backup + Optimize
+3. Startup Manager → Review new entries
+4. Registry Cleaner → Scan & Clean
+5. Disk Cleanup → Scan & Clean
+6. Dashboard → Optimize (auto-execute plan)
+
+---
+
+## 🚀 Advanced Usage
+
+### Command-Line Parameters
+
+(Future feature - not yet implemented)
+
+```powershell
+# Quick scan and exit
+WinCheck.App.exe --quick-scan
+
+# Deep scan and generate report
+WinCheck.App.exe --deep-scan --report="C:\Reports\scan.json"
+
+# Auto-optimize
+WinCheck.App.exe --optimize --backup
+
+# Disk cleanup
+WinCheck.App.exe --cleanup --aggressive
+```
+
+### Automation with Task Scheduler
+
+(User can set up manually)
+
+1. Open Task Scheduler
+2. Create Task → "WinCheck Weekly Scan"
+3. Trigger: Weekly, Sunday 10:00 AM
+4. Action: Start program → `C:\Path\To\WinCheck.App.exe`
+5. Conditions: Only if computer idle for 10 minutes
+
+---
+
+## 🆘 Getting Help
+
+### Before Asking for Help
+
+1. Check this README thoroughly
+2. Review Troubleshooting section
+3. Check Event Viewer for error details
+4. Try running as administrator
+5. Verify .NET 8.0 Runtime installed
+
+### Reporting Issues
+
+When opening GitHub issue, include:
+
+1. **System Information**:
+   - Windows version (Win+R → `winver`)
+   - .NET version (`dotnet --info`)
+   - WinCheck version
+
+2. **Issue Description**:
+   - What were you trying to do?
+   - What happened instead?
+   - Exact error message (screenshot if possible)
+
+3. **Steps to Reproduce**:
+   - Step 1: ...
+   - Step 2: ...
+   - Expected result: ...
+   - Actual result: ...
+
+4. **Logs** (if applicable):
+   - Event Viewer errors
+   - Settings file: `%LocalAppData%\WinCheck\settings.json`
+
+---
+
+## 📝 Changelog
+
+### v1.0.0 (November 2025)
+- ✅ Initial release
+- ✅ AI-powered system analysis (OpenAI, Claude, Gemini)
+- ✅ Real-time process monitoring
+- ✅ Suspicious process detection
+- ✅ Disk cleanup
+- ✅ Service optimization
+- ✅ Startup program management
+- ✅ Registry cleaning
+- ✅ Hardware detection
+- ✅ Network monitoring
+- ✅ Settings persistence
+
+### Known Issues v1.0.0
+- Settings → Language selection (not yet implemented)
+- Scheduled scans (not yet implemented)
+- Export reports to PDF (not yet implemented)
+- Dark theme (not yet implemented)
+
+---
+
+## 🤝 Contributing
+
+See main README sections above for contribution guidelines.
+
+---
+
+**Last Updated**: November 2025
+**Version**: 1.0.0
+**Maintained by**: WinCheck Development Team

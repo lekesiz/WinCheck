@@ -91,3 +91,8 @@ _Pvt_Extensions/
 *.bak
 *.orig
 *.log
+publish/
+dist/
+*.zip
+error.txt
+output.txt

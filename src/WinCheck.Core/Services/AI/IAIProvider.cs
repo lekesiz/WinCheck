@@ -22,10 +22,3 @@ public class AICompletionOptions
     public int MaxTokens { get; set; } = 2000;
     public string? SystemPrompt { get; set; }
 }
-
-public enum AIProviderType
-{
-    OpenAI,
-    Claude,
-    Gemini
-}

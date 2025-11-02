@@ -30,14 +30,16 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        // ViewModels
+        // ViewModels - ALL 7 ViewModels registered
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<ProcessMonitorViewModel>();
         services.AddTransient<ServiceOptimizerViewModel>();
         services.AddTransient<DiskCleanupViewModel>();
+        services.AddTransient<StartupManagerViewModel>();
+        services.AddTransient<RegistryCleanerViewModel>();
         services.AddTransient<SettingsViewModel>();
 
-        // Core Services
+        // Core Services - ALL 9 Services registered
         services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
         services.AddSingleton<INetworkMonitorService, NetworkMonitorService>();
         services.AddSingleton<IHardwareDetectionService, HardwareDetectionService>();
@@ -46,25 +48,21 @@ public partial class App : Application
         services.AddSingleton<IDiskCleanupService, DiskCleanupService>();
         services.AddSingleton<IRegistryCleanerService, RegistryCleanerService>();
         services.AddSingleton<IStartupManagerService, StartupManagerService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
 
-        // AI Providers (Load from settings - for now use placeholder)
-        // In production, these should be loaded from user settings
+        // AI Providers - Lazy loading with default
         services.AddSingleton<IAIProvider>(sp =>
         {
-            // Default to OpenAI - user can change in settings
-            var apiKey = ""; // Will be loaded from settings
-            return new OpenAIProvider(apiKey);
+            // Start with default OpenAI provider with empty key
+            // Will be configured later from settings
+            return new OpenAIProvider(string.Empty);
         });
 
-        // AI System Analyzer (Crown Jewel)
+        // AI System Analyzer (Crown Jewel - Orchestrates all services)
         services.AddSingleton<IAISystemAnalyzer, AISystemAnalyzer>();
 
-        // Logging
-        services.AddLogging(builder =>
-        {
-            builder.AddDebug();
-            builder.AddConsole();
-        });
+        // Logging (basic)
+        services.AddLogging();
 
         return services.BuildServiceProvider();
     }

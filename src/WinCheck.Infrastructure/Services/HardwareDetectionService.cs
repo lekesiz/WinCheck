@@ -644,7 +644,6 @@ public class HardwareDetectionService : IHardwareDetectionService
         // Multi-core test
         var multiCoreScore = await Task.Run(() =>
         {
-            var iterations = 0;
             var sw = Stopwatch.StartNew();
             var tasks = new List<Task<int>>();
 

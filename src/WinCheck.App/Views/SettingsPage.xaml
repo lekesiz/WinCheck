@@ -1,10 +1,133 @@
 <Page
     x:Class="WinCheck.App.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Padding="24">
-        <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
-        <TextBlock Text="Settings options coming soon..." Margin="0,16,0,0" />
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel Padding="24" MaxWidth="800" Spacing="24">
+            <!-- Title -->
+            <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <!-- AI Provider Section -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="AI Provider Configuration" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Text="Configure your preferred AI provider for system analysis"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          TextWrapping="Wrap" />
+
+                <!-- OpenAI -->
+                <StackPanel Spacing="8" Margin="0,12,0,0">
+                    <TextBlock Text="OpenAI API Key" FontWeight="SemiBold" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <PasswordBox x:Name="OpenAIKeyBox"
+                                    Grid.Column="0"
+                                    PlaceholderText="sk-..."
+                                    Password="{x:Bind ViewModel.OpenAIApiKey, Mode=TwoWay}" />
+                        <Button Grid.Column="1"
+                               Content="Validate"
+                               Command="{x:Bind ViewModel.ValidateOpenAIKeyCommand}"
+                               Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- Claude -->
+                <StackPanel Spacing="8" Margin="0,12,0,0">
+                    <TextBlock Text="Claude API Key" FontWeight="SemiBold" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <PasswordBox x:Name="ClaudeKeyBox"
+                                    Grid.Column="0"
+                                    PlaceholderText="sk-ant-..."
+                                    Password="{x:Bind ViewModel.ClaudeApiKey, Mode=TwoWay}" />
+                        <Button Grid.Column="1"
+                               Content="Validate"
+                               Command="{x:Bind ViewModel.ValidateClaudeKeyCommand}"
+                               Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- Gemini -->
+                <StackPanel Spacing="8" Margin="0,12,0,0">
+                    <TextBlock Text="Gemini API Key" FontWeight="SemiBold" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <PasswordBox x:Name="GeminiKeyBox"
+                                    Grid.Column="0"
+                                    PlaceholderText="AI..."
+                                    Password="{x:Bind ViewModel.GeminiApiKey, Mode=TwoWay}" />
+                        <Button Grid.Column="1"
+                               Content="Validate"
+                               Command="{x:Bind ViewModel.ValidateGeminiKeyCommand}"
+                               Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- AI Provider Selection -->
+                <StackPanel Spacing="8" Margin="0,12,0,0">
+                    <TextBlock Text="Active AI Provider" FontWeight="SemiBold" />
+                    <ComboBox x:Name="ProviderCombo"
+                             SelectedIndex="{x:Bind ViewModel.SelectedProviderIndex, Mode=TwoWay}"
+                             HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="OpenAI GPT-4" />
+                        <ComboBoxItem Content="Claude 3.5 Sonnet" />
+                        <ComboBoxItem Content="Gemini 1.5 Pro" />
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Monitoring Options -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Monitoring Options" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <ToggleSwitch Header="Enable Process Monitoring"
+                            OnContent="Enabled"
+                            OffContent="Disabled"
+                            IsOn="{x:Bind ViewModel.EnableProcessMonitoring, Mode=TwoWay}" />
+                <ToggleSwitch Header="Enable Network Monitoring"
+                            OnContent="Enabled"
+                            OffContent="Disabled"
+                            IsOn="{x:Bind ViewModel.EnableNetworkMonitoring, Mode=TwoWay}" />
+            </StackPanel>
+
+            <!-- Status and Actions -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                          Foreground="{ThemeResource SystemAccentColor}"
+                          TextWrapping="Wrap" />
+
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button Content="Save Settings"
+                           Command="{x:Bind ViewModel.SaveSettingsCommand}"
+                           Style="{StaticResource AccentButtonStyle}" />
+                    <Button Content="Reset to Defaults"
+                           Command="{x:Bind ViewModel.ResetSettingsCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Information -->
+            <StackPanel Spacing="8" Background="{ThemeResource LayerFillColorDefaultBrush}"
+                       Padding="16" CornerRadius="8">
+                <TextBlock Text="ℹ️ Information" FontWeight="SemiBold" />
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    API keys are stored locally on your computer at: %LocalAppData%\WinCheck\settings.json
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    Keys are never transmitted except to the respective AI provider for analysis.
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

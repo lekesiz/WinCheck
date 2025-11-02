@@ -1,10 +1,279 @@
 <Page
     x:Class="WinCheck.App.Views.StartupManagerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Padding="24">
-        <TextBlock Text="Startup Manager" Style="{StaticResource TitleTextBlockStyle}" />
-        <TextBlock Text="Startup management features coming soon..." Margin="0,16,0,0" />
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel Padding="24" Spacing="24">
+            <!-- Header Section -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Startup Manager" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Manage programs that start automatically with Windows to improve boot time"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Boot Performance Overview -->
+            <Grid ColumnSpacing="16" RowSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Total Programs Card -->
+                <Border Grid.Column="0"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Total Programs" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.TotalPrograms, Mode=OneWay}"
+                                  FontSize="32"
+                                  FontWeight="Bold"
+                                  Foreground="{ThemeResource SystemAccentColor}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Enabled Programs Card -->
+                <Border Grid.Column="1"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Enabled" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.EnabledPrograms, Mode=OneWay}"
+                                  FontSize="32"
+                                  FontWeight="Bold"
+                                  Foreground="Green" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Disabled Programs Card -->
+                <Border Grid.Column="2"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Disabled" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.DisabledPrograms, Mode=OneWay}"
+                                  FontSize="32"
+                                  FontWeight="Bold"
+                                  Foreground="Gray" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Boot Time Card -->
+                <Border Grid.Column="3"
+                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Est. Boot Time" FontWeight="SemiBold" FontSize="12" />
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="{x:Bind ViewModel.EstimatedBootTime, Mode=OneWay}"
+                                      FontSize="32"
+                                      FontWeight="Bold" />
+                            <TextBlock Text="s" FontSize="20" VerticalAlignment="Bottom" Margin="0,0,0,6" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Time Saving Alert -->
+            <Border Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
+                   Padding="16"
+                   CornerRadius="8"
+                   Visibility="{x:Bind ViewModel.PotentialTimeSaving, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}">
+                <StackPanel Spacing="4">
+                    <TextBlock FontWeight="SemiBold">
+                        <Run Text="💡 Potential Time Saving:" />
+                        <Run Text="{x:Bind ViewModel.PotentialTimeSaving, Mode=OneWay}" />
+                        <Run Text="seconds" />
+                    </TextBlock>
+                    <TextBlock Text="Disable recommended programs to improve boot performance"
+                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Control Buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Command="{x:Bind ViewModel.LoadDataCommand}"
+                       IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
+                       Style="{StaticResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ProgressRing Width="16" Height="16"
+                                    IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                                    Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <TextBlock Text="Load Programs" />
+                    </StackPanel>
+                </Button>
+
+                <Button Content="Disable Recommended"
+                       Command="{x:Bind ViewModel.DisableAllRecommendedCommand}"
+                       IsEnabled="{x:Bind ViewModel.Recommendations.Count, Mode=OneWay, Converter={StaticResource CountToBoolConverter}}" />
+
+                <Button Content="Enable All"
+                       Command="{x:Bind ViewModel.EnableAllCommand}" />
+
+                <Button Content="Refresh"
+                       Command="{x:Bind ViewModel.RefreshCommand}" />
+            </StackPanel>
+
+            <!-- Status Message -->
+            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                      Foreground="{ThemeResource SystemAccentColor}"
+                      TextWrapping="Wrap"
+                      Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}" />
+
+            <!-- Recommendations Section -->
+            <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.Recommendations.Count, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}">
+                <TextBlock Text="AI Recommendations" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <ListView ItemsSource="{x:Bind ViewModel.Recommendations, Mode=OneWay}"
+                         SelectionMode="None"
+                         MaxHeight="300">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Padding="12" Spacing="4"
+                                       Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                       Margin="0,4">
+                                <TextBlock Text="{Binding Program.Name}" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding Reason}"
+                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                          TextWrapping="Wrap" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBlock>
+                                        <Run Text="Impact:" />
+                                        <Run Text="{Binding Program.Impact}" FontWeight="SemiBold" />
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <Run Text="Save:" />
+                                        <Run Text="{Binding TimeSavingSeconds}" FontWeight="SemiBold" />
+                                        <Run Text="s" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+
+            <!-- All Programs List -->
+            <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.StartupPrograms.Count, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}">
+                <TextBlock Text="All Startup Programs" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <ListView ItemsSource="{x:Bind ViewModel.StartupPrograms, Mode=OneWay}"
+                         SelectedItem="{x:Bind ViewModel.SelectedProgram, Mode=TwoWay}"
+                         SelectionMode="Single"
+                         MaxHeight="500">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="12,8" ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Toggle Switch -->
+                                <ToggleSwitch Grid.Column="0"
+                                            IsOn="{Binding IsEnabled, Mode=TwoWay}"
+                                            IsEnabled="{Binding IsToggling, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
+                                            Command="{Binding ToggleStateCommand}"
+                                            OffContent=""
+                                            OnContent=""
+                                            MinWidth="40" />
+
+                                <!-- Program Info -->
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" />
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                            <Run Text="Publisher:" />
+                                            <Run Text="{Binding PublisherText}" />
+                                        </TextBlock>
+                                        <TextBlock Text="{Binding SignedText}"
+                                                  Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                                    </StackPanel>
+                                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}">
+                                        <Run Text="Location:" />
+                                        <Run Text="{Binding LocationText}" />
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <!-- Impact Badge -->
+                                <Border Grid.Column="2"
+                                       Background="{Binding ImpactColor}"
+                                       Padding="8,4"
+                                       CornerRadius="4"
+                                       VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding ImpactText}"
+                                              FontSize="12"
+                                              FontWeight="SemiBold"
+                                              Foreground="White" />
+                                </Border>
+
+                                <!-- Remove Button -->
+                                <Button Grid.Column="3"
+                                       Content="Remove"
+                                       Command="{Binding RemoveCommand}"
+                                       IsEnabled="{Binding IsToggling, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+
+            <!-- Impact Legend -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Impact Levels" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Border Background="#DC3545" Padding="8,4" CornerRadius="4">
+                        <TextBlock Text="Very High" FontSize="12" Foreground="White" />
+                    </Border>
+                    <Border Background="#FD7E14" Padding="8,4" CornerRadius="4">
+                        <TextBlock Text="High" FontSize="12" Foreground="White" />
+                    </Border>
+                    <Border Background="#FFC107" Padding="8,4" CornerRadius="4">
+                        <TextBlock Text="Medium" FontSize="12" Foreground="White" />
+                    </Border>
+                    <Border Background="#28A745" Padding="8,4" CornerRadius="4">
+                        <TextBlock Text="Low" FontSize="12" Foreground="White" />
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Information Box -->
+            <StackPanel Spacing="8"
+                       Background="{ThemeResource LayerFillColorDefaultBrush}"
+                       Padding="16"
+                       CornerRadius="8">
+                <TextBlock Text="ℹ️ Information" FontWeight="SemiBold" />
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    Startup programs run automatically when Windows starts. Disabling unnecessary programs can significantly improve boot time.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    You can always re-enable programs later if needed. Consider AI recommendations for safe optimizations.
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

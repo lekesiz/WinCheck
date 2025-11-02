@@ -1,10 +1,188 @@
 <Page
     x:Class="WinCheck.App.Views.ServiceOptimizerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Padding="24">
-        <TextBlock Text="Service Optimizer" Style="{StaticResource TitleTextBlockStyle}" />
-        <TextBlock Text="Service optimization features coming soon..." Margin="0,16,0,0" />
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel Padding="24" Spacing="24">
+            <!-- Header Section -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Service Optimizer" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Optimize Windows services for better performance and reduced resource usage"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Summary Card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                   BorderThickness="1"
+                   CornerRadius="8"
+                   Padding="24">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Optimizable Services" FontWeight="SemiBold" />
+                    <TextBlock Text="{x:Bind ViewModel.OptimizableCount, Mode=OneWay}"
+                              Style="{StaticResource HeaderTextBlockStyle}"
+                              Foreground="{ThemeResource SystemAccentColor}" />
+                    <TextBlock Text="Click 'Load Services' to scan your system"
+                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                              Visibility="{x:Bind ViewModel.Services.Count, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter=inverse}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Control Buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="Load Services"
+                       Command="{x:Bind ViewModel.LoadDataCommand}"
+                       IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
+                       Style="{StaticResource AccentButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <ProgressRing Width="16" Height="16"
+                                        IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                                        Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <TextBlock Text="Load Services" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+
+                <Button Content="Optimize All"
+                       Command="{x:Bind ViewModel.OptimizeAllCommand}"
+                       IsEnabled="{x:Bind ViewModel.Services.Count, Mode=OneWay, Converter={StaticResource CountToBoolConverter}}" />
+
+                <Button Content="Create Backup"
+                       Command="{x:Bind ViewModel.CreateBackupCommand}" />
+
+                <Button Content="Restore Backup"
+                       Command="{x:Bind ViewModel.RestoreBackupCommand}" />
+            </StackPanel>
+
+            <!-- Status Message -->
+            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                      Foreground="{ThemeResource SystemAccentColor}"
+                      TextWrapping="Wrap" />
+
+            <!-- Services List -->
+            <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.Services.Count, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}">
+                <TextBlock Text="Services to Optimize" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <ListView ItemsSource="{x:Bind ViewModel.Services, Mode=OneWay}"
+                         SelectionMode="None"
+                         MaxHeight="500">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="12" ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Text="{Binding ServiceName}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Description}"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              TextWrapping="Wrap" />
+                                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}">
+                                        <Run Text="Current:" />
+                                        <Run Text="{Binding CurrentStartupType}" FontWeight="SemiBold" />
+                                        <Run Text=" → Recommended:" />
+                                        <Run Text="{Binding RecommendedStartupType}"
+                                             FontWeight="SemiBold"
+                                             Foreground="{ThemeResource SystemAccentColor}" />
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                                    <TextBlock Text="Impact"
+                                              FontSize="12"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Text="{Binding Impact}"
+                                              FontWeight="SemiBold"
+                                              HorizontalAlignment="Center" />
+                                </StackPanel>
+
+                                <Border Grid.Column="2"
+                                       Background="{ThemeResource SystemFillColorSuccessBrush}"
+                                       Padding="8,4"
+                                       CornerRadius="4"
+                                       VerticalAlignment="Center">
+                                    <TextBlock Text="Safe" FontSize="12" FontWeight="SemiBold" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+
+            <!-- Service Impact Explanation -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Impact Levels" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <StackPanel Spacing="8">
+                    <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
+                           Padding="12"
+                           CornerRadius="4">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="High Impact" FontWeight="SemiBold" Foreground="Green" />
+                            <TextBlock Text="Significant performance improvement and resource savings"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
+                           Padding="12"
+                           CornerRadius="4">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Medium Impact" FontWeight="SemiBold" Foreground="Orange" />
+                            <TextBlock Text="Noticeable improvement with moderate resource savings"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
+                           Padding="12"
+                           CornerRadius="4">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Low Impact" FontWeight="SemiBold" />
+                            <TextBlock Text="Minor improvement, mainly for consistency"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Warning Box -->
+            <StackPanel Spacing="8"
+                       Background="{ThemeResource SystemFillColorCautionBackgroundBrush}"
+                       Padding="16"
+                       CornerRadius="8">
+                <TextBlock Text="⚠️ Important" FontWeight="SemiBold" />
+                <TextBlock TextWrapping="Wrap">
+                    Always create a backup before optimizing services. While WinCheck only suggests safe optimizations, you can restore your settings if needed.
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Information Box -->
+            <StackPanel Spacing="8"
+                       Background="{ThemeResource LayerFillColorDefaultBrush}"
+                       Padding="16"
+                       CornerRadius="8">
+                <TextBlock Text="ℹ️ Information" FontWeight="SemiBold" />
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    Service optimization changes how Windows services start, reducing resource usage and improving boot times.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    Only non-critical services are suggested for optimization, ensuring your system remains stable.
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

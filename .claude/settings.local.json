@@ -16,7 +16,10 @@
       "Bash(findstr:*)",
       "Bash(start WinCheck.App.exe)",
       "Bash(.gitignore)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git tag:*)"
     ],
     "deny": [],
     "ask": []

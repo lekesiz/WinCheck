@@ -18,7 +18,12 @@ WinCheck, **AI destekli** Windows 7/8/10/11 işletim sistemleri için geliştiri
 
 **Tüm core servisler ve UI production-ready!**
 
-**Son Güncellemeler:**
+**Son Güncellemeler (v1.1.0):**
+- ✅ Dark Mode desteği eklendi (Light/Dark/System)
+- ✅ Command Line Interface (CLI) eklendi
+- ✅ Gelişmiş hata yakalama ve crash dump sistemi
+- ✅ Otomatik güncelleme servisi (GitHub Releases)
+- ✅ 56 unit + integration test (%100 başarı)
 - ✅ Tüm XAML sayfaları compile-time binding (`{x:Bind}`) kullanıyor
 - ✅ Dashboard metrics multi-level fallback ile çalışıyor
 - ✅ Settings sayfası erişilebilir
@@ -113,6 +118,55 @@ WinCheck, **AI destekli** Windows 7/8/10/11 işletim sistemleri için geliştiri
 - Impact analysis with boot time savings estimation
 - Signed program verification
 - Bloatware detection and recommendations
+
+## 🆕 Yeni Özellikler (v1.1.0)
+
+### 🌙 Dark Mode Desteği
+- **ThemeService**: Light/Dark/System tema seçenekleri
+- Kalıcı tema ayarları (Windows.Storage)
+- Runtime'da tema değiştirme
+- Windows sistem teması ile otomatik senkronizasyon
+
+### 💻 Command Line Interface (CLI)
+```bash
+# Hızlı sistem taraması
+wincheck scan --quick
+
+# Detaylı tarama
+wincheck scan --verbose
+
+# Dosya temizliği
+wincheck clean
+
+# Sistem durumu
+wincheck status
+
+# İşlem listesi
+wincheck process
+```
+
+**Özellikler:**
+- System.CommandLine ile profesyonel CLI
+- Progress göstergeleri
+- Otomasyon ve scripting desteği
+- Renkli ve formatlı çıktı
+
+### 🛡️ Gelişmiş Hata Yakalama
+- **ErrorHandlingService**: Global exception handling
+- Crash dump oluşturma (JSON format)
+- Son 100 hata geçmişi
+- Severity seviyeleri (Info, Warning, Error, Critical)
+- Otomatik crash dump temizleme
+- Thread-safe error collection
+- **Konum**: `%LocalAppData%\WinCheck\CrashDumps\`
+
+### 🔄 Otomatik Güncelleme
+- **AutoUpdateService**: GitHub Releases entegrasyonu
+- Semantic version karşılaştırma
+- Otomatik versiyon kontrolü
+- One-click download ve install
+- Release notes gösterimi
+- Otomatik yetki yükseltme
 
 ## Temel Özellikler
 

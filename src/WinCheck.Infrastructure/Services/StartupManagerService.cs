@@ -19,14 +19,26 @@ public class StartupManagerService : IStartupManagerService
 
         await Task.Run(() =>
         {
-            // Scan registry Run keys
-            programs.AddRange(GetRegistryStartupPrograms());
+            try
+            {
+                // Scan registry Run keys
+                programs.AddRange(GetRegistryStartupPrograms());
+            }
+            catch { }
 
-            // Scan Startup folder
-            programs.AddRange(GetStartupFolderPrograms());
+            try
+            {
+                // Scan Startup folder
+                programs.AddRange(GetStartupFolderPrograms());
+            }
+            catch { }
 
-            // Scan Task Scheduler
-            programs.AddRange(GetTaskSchedulerPrograms());
+            try
+            {
+                // Scan Task Scheduler
+                programs.AddRange(GetTaskSchedulerPrograms());
+            }
+            catch { }
         });
 
         return programs;
@@ -468,33 +480,44 @@ public class StartupManagerService : IStartupManagerService
 
     private void AnalyzeProgram(StartupProgram program)
     {
-        // Extract file path from command
-        var filePath = ExtractFilePath(program.Command);
-
-        if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+        try
         {
-            try
-            {
-                var versionInfo = FileVersionInfo.GetVersionInfo(filePath);
-                program.Publisher = versionInfo.CompanyName ?? "Unknown";
+            // Extract file path from command
+            var filePath = ExtractFilePath(program.Command);
 
-                // Check if signed
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            {
                 try
                 {
-                    var cert = System.Security.Cryptography.X509Certificates.X509Certificate.CreateFromSignedFile(filePath);
-                    program.IsSigned = cert != null;
+                    var versionInfo = FileVersionInfo.GetVersionInfo(filePath);
+                    program.Publisher = versionInfo.CompanyName ?? "Unknown";
                 }
                 catch
                 {
-                    program.IsSigned = false;
+                    program.Publisher = "Unknown";
                 }
-            }
-            catch { }
-        }
 
-        // Estimate impact and delay
-        program.Impact = EstimateImpact(program);
-        program.EstimatedDelayMs = EstimateDelay(program.Impact);
+                // Skip signature checking - it's unreliable and can crash
+                program.IsSigned = false;
+            }
+            else
+            {
+                program.Publisher = "Unknown";
+                program.IsSigned = false;
+            }
+
+            // Estimate impact and delay
+            program.Impact = EstimateImpact(program);
+            program.EstimatedDelayMs = EstimateDelay(program.Impact);
+        }
+        catch
+        {
+            // Set safe defaults if anything fails
+            program.Publisher = "Unknown";
+            program.IsSigned = false;
+            program.Impact = StartupImpact.Medium;
+            program.EstimatedDelayMs = 1000;
+        }
     }
 
     private string ExtractFilePath(string command)

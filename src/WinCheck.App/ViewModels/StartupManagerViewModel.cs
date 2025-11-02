@@ -56,26 +56,70 @@ public partial class StartupManagerViewModel : ObservableObject
             IsLoading = true;
             StatusMessage = "Loading startup programs...";
 
-            // Load programs
-            var programs = await _startupService.GetStartupProgramsAsync();
-            StartupPrograms.Clear();
-            foreach (var program in programs.OrderByDescending(p => p.Impact).ThenBy(p => p.Name))
+            // Load programs with safety
+            try
             {
-                StartupPrograms.Add(new StartupProgramViewModel(program, _startupService));
+                var programs = await _startupService.GetStartupProgramsAsync();
+                StartupPrograms.Clear();
+
+                if (programs != null)
+                {
+                    foreach (var program in programs.OrderByDescending(p => p.Impact).ThenBy(p => p.Name))
+                    {
+                        try
+                        {
+                            if (program != null)
+                            {
+                                StartupPrograms.Add(new StartupProgramViewModel(program, _startupService));
+                            }
+                        }
+                        catch
+                        {
+                            // Skip problematic programs
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error loading programs: {ex.Message}";
             }
 
-            // Load impact analysis
-            var analysis = await _startupService.AnalyzeBootImpactAsync();
-            TotalPrograms = analysis.TotalStartupPrograms;
-            EnabledPrograms = analysis.EnabledPrograms;
-            DisabledPrograms = analysis.DisabledPrograms;
-            EstimatedBootTime = analysis.EstimatedBootTimeSeconds;
-            PotentialTimeSaving = analysis.PotentialTimeSavingSeconds;
-
-            Recommendations.Clear();
-            foreach (var recommendation in analysis.Recommendations.Take(10))
+            // Load impact analysis with safety
+            try
             {
-                Recommendations.Add(recommendation);
+                var analysis = await _startupService.AnalyzeBootImpactAsync();
+                if (analysis != null)
+                {
+                    TotalPrograms = analysis.TotalStartupPrograms;
+                    EnabledPrograms = analysis.EnabledPrograms;
+                    DisabledPrograms = analysis.DisabledPrograms;
+                    EstimatedBootTime = analysis.EstimatedBootTimeSeconds;
+                    PotentialTimeSaving = analysis.PotentialTimeSavingSeconds;
+
+                    Recommendations.Clear();
+                    if (analysis.Recommendations != null)
+                    {
+                        foreach (var recommendation in analysis.Recommendations.Take(10))
+                        {
+                            try
+                            {
+                                if (recommendation != null)
+                                {
+                                    Recommendations.Add(recommendation);
+                                }
+                            }
+                            catch
+                            {
+                                // Skip problematic recommendations
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error analyzing impact: {ex.Message}";
             }
 
             StatusMessage = $"Loaded {TotalPrograms} startup programs";
@@ -175,26 +219,26 @@ public partial class StartupProgramViewModel : ObservableObject
     [ObservableProperty]
     private bool _isToggling;
 
-    public string DisplayName => Program.Name;
-    public string LocationText => Program.Location.ToString();
-    public string ImpactText => Program.Impact.ToString();
-    public string ImpactColor => Program.Impact switch
+    public string DisplayName => Program?.Name ?? "Unknown";
+    public string LocationText => Program?.Location.ToString() ?? "Unknown";
+    public string ImpactText => Program?.Impact.ToString() ?? "Unknown";
+    public string ImpactColor => Program?.Impact switch
     {
         StartupImpact.VeryHigh => "#DC3545",
         StartupImpact.High => "#FD7E14",
         StartupImpact.Medium => "#FFC107",
         StartupImpact.Low => "#28A745",
         _ => "#6C757D"
-    };
-    public string PublisherText => string.IsNullOrEmpty(Program.Publisher) ? "Unknown" : Program.Publisher;
-    public string SignedText => Program.IsSigned ? "Signed" : "Not signed";
-    public string DelayText => Program.EstimatedDelayMs > 0 ? $"{Program.EstimatedDelayMs}ms" : "N/A";
+    } ?? "#6C757D";
+    public string PublisherText => string.IsNullOrEmpty(Program?.Publisher) ? "Unknown" : Program.Publisher;
+    public string SignedText => (Program?.IsSigned ?? false) ? "Signed" : "Not signed";
+    public string DelayText => (Program?.EstimatedDelayMs ?? 0) > 0 ? $"{Program.EstimatedDelayMs}ms" : "N/A";
 
     public StartupProgramViewModel(StartupProgram program, IStartupManagerService startupService)
     {
-        _program = program;
-        _startupService = startupService;
-        _isEnabled = program.IsEnabled;
+        _program = program ?? throw new ArgumentNullException(nameof(program));
+        _startupService = startupService ?? throw new ArgumentNullException(nameof(startupService));
+        _isEnabled = program?.IsEnabled ?? false;
     }
 
     [RelayCommand]

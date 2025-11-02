@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:WinCheck.Core.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -107,10 +108,10 @@
                          MaxHeight="200"
                          SelectionMode="None">
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:SuspiciousProcess">
                             <StackPanel Padding="8" Spacing="4">
-                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                                <TextBlock Text="{Binding Reason}"
+                                <TextBlock Text="{x:Bind Metrics.Name}" FontWeight="SemiBold" />
+                                <TextBlock Text="{x:Bind Description}"
                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                           TextWrapping="Wrap" />
                             </StackPanel>
@@ -145,7 +146,7 @@
                     </ListView.Header>
 
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:ProcessMetrics">
                             <Grid Padding="12,8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50" />
@@ -154,17 +155,11 @@
                                     <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="100" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding ProcessId}" />
-                                <TextBlock Grid.Column="1" Text="{Binding Name}" />
-                                <TextBlock Grid.Column="2">
-                                    <Run Text="{Binding CpuUsage}" />
-                                    <Run Text="%" />
-                                </TextBlock>
-                                <TextBlock Grid.Column="3">
-                                    <Run Text="{Binding MemoryUsageMB}" />
-                                    <Run Text="MB" />
-                                </TextBlock>
-                                <TextBlock Grid.Column="4" Text="{Binding ThreadCount}" />
+                                <TextBlock Grid.Column="0" Text="{x:Bind ProcessId}" />
+                                <TextBlock Grid.Column="1" Text="{x:Bind Name}" />
+                                <TextBlock Grid.Column="2" Text="{x:Bind CpuUsage}" />
+                                <TextBlock Grid.Column="3" Text="{x:Bind MemoryUsage}" />
+                                <TextBlock Grid.Column="4" Text="{x:Bind ThreadCount}" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

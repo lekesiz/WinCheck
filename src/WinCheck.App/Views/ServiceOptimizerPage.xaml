@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:WinCheck.Core.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -60,18 +61,18 @@
                          SelectionMode="None"
                          MaxHeight="500">
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:ServiceOptimization">
                             <Grid Padding="12">
                                 <StackPanel Spacing="4">
-                                    <TextBlock Text="{Binding ServiceName}" FontWeight="SemiBold" />
-                                    <TextBlock Text="{Binding Description}"
+                                    <TextBlock Text="{x:Bind ServiceName}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{x:Bind Description}"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                               TextWrapping="Wrap" />
                                     <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}">
                                         <Run Text="Current:" />
-                                        <Run Text="{Binding CurrentStartupType}" />
+                                        <Run Text="{x:Bind CurrentStartMode}" />
                                         <Run Text=" → Recommended:" />
-                                        <Run Text="{Binding RecommendedStartupType}" />
+                                        <Run Text="{x:Bind RecommendedStartMode}" />
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>

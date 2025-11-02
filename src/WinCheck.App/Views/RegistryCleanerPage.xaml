@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:WinCheck.App.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -114,7 +115,7 @@
                          SelectionMode="None"
                          MaxHeight="500">
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="viewmodels:RegistryIssueViewModel">
                             <Grid Padding="12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -122,37 +123,38 @@
                                 </Grid.ColumnDefinitions>
 
                                 <CheckBox Grid.Column="0"
-                                         IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                         IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
                                          VerticalAlignment="Top"
                                          Margin="0,8,12,0" />
 
                                 <StackPanel Grid.Column="1" Spacing="4">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="{Binding TypeText}" FontWeight="SemiBold" />
-                                        <Border Background="{Binding SeverityColor}"
-                                               CornerRadius="4"
-                                               Padding="6,2">
-                                            <TextBlock Text="{Binding SeverityText}"
+                                        <TextBlock Text="{x:Bind TypeText}" FontWeight="SemiBold" />
+                                        <Border CornerRadius="4" Padding="6,2">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{x:Bind SeverityColor}" />
+                                            </Border.Background>
+                                            <TextBlock Text="{x:Bind SeverityText}"
                                                       Foreground="White"
                                                       FontSize="11"
                                                       FontWeight="SemiBold" />
                                         </Border>
                                     </StackPanel>
 
-                                    <TextBlock Text="{Binding Issue.Description}"
+                                    <TextBlock Text="{x:Bind Issue.Description}"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                               TextWrapping="Wrap" />
 
                                     <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                               FontSize="11">
                                         <Run Text="Key:" />
-                                        <Run Text="{Binding KeyPathShort}" />
+                                        <Run Text="{x:Bind KeyPathShort}" />
                                     </TextBlock>
 
                                     <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                               FontSize="11">
                                         <Run Text="Fixable:" />
-                                        <Run Text="{Binding FixableText}" />
+                                        <Run Text="{x:Bind FixableText}" />
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>

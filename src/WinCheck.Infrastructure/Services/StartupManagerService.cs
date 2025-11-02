@@ -191,39 +191,82 @@ public class StartupManagerService : IStartupManagerService
 
     public async Task<StartupImpactAnalysis> AnalyzeBootImpactAsync()
     {
-        var programs = await GetStartupProgramsAsync();
-
-        var analysis = new StartupImpactAnalysis
+        try
         {
-            TotalStartupPrograms = programs.Count,
-            EnabledPrograms = programs.Count(p => p.IsEnabled),
-            DisabledPrograms = programs.Count(p => !p.IsEnabled)
-        };
+            var programs = await GetStartupProgramsAsync();
 
-        // Estimate boot time based on enabled programs
-        var enabledPrograms = programs.Where(p => p.IsEnabled).ToList();
-        analysis.EstimatedBootTimeSeconds = enabledPrograms.Sum(p => p.EstimatedDelayMs) / 1000;
-
-        // Calculate potential savings
-        var highImpactPrograms = enabledPrograms.Where(p => p.Impact >= StartupImpact.High).ToList();
-        analysis.PotentialTimeSavingSeconds = highImpactPrograms.Sum(p => p.EstimatedDelayMs) / 1000;
-
-        // Generate recommendations
-        foreach (var program in enabledPrograms)
-        {
-            if (ShouldRecommendDisabling(program))
+            var analysis = new StartupImpactAnalysis
             {
-                analysis.Recommendations.Add(new StartupRecommendation
-                {
-                    Program = program,
-                    Reason = GetDisableReason(program),
-                    RecommendDisable = true,
-                    EstimatedTimeSavingMs = program.EstimatedDelayMs
-                });
-            }
-        }
+                TotalStartupPrograms = 0,
+                EnabledPrograms = 0,
+                DisabledPrograms = 0,
+                EstimatedBootTimeSeconds = 0,
+                PotentialTimeSavingSeconds = 0
+            };
 
-        return analysis;
+            try
+            {
+                analysis.TotalStartupPrograms = programs?.Count ?? 0;
+                analysis.EnabledPrograms = programs?.Count(p => p != null && p.IsEnabled) ?? 0;
+                analysis.DisabledPrograms = programs?.Count(p => p != null && !p.IsEnabled) ?? 0;
+            }
+            catch { }
+
+            try
+            {
+                // Estimate boot time based on enabled programs
+                var enabledPrograms = programs?.Where(p => p != null && p.IsEnabled).ToList() ?? new List<StartupProgram>();
+                analysis.EstimatedBootTimeSeconds = enabledPrograms.Sum(p => p.EstimatedDelayMs) / 1000;
+            }
+            catch { }
+
+            try
+            {
+                // Calculate potential savings
+                var enabledPrograms = programs?.Where(p => p != null && p.IsEnabled).ToList() ?? new List<StartupProgram>();
+                var highImpactPrograms = enabledPrograms.Where(p => p.Impact >= StartupImpact.High).ToList();
+                analysis.PotentialTimeSavingSeconds = highImpactPrograms.Sum(p => p.EstimatedDelayMs) / 1000;
+            }
+            catch { }
+
+            try
+            {
+                // Generate recommendations
+                var enabledPrograms = programs?.Where(p => p != null && p.IsEnabled).ToList() ?? new List<StartupProgram>();
+                foreach (var program in enabledPrograms)
+                {
+                    try
+                    {
+                        if (ShouldRecommendDisabling(program))
+                        {
+                            analysis.Recommendations.Add(new StartupRecommendation
+                            {
+                                Program = program,
+                                Reason = GetDisableReason(program),
+                                RecommendDisable = true,
+                                EstimatedTimeSavingMs = program.EstimatedDelayMs
+                            });
+                        }
+                    }
+                    catch { }
+                }
+            }
+            catch { }
+
+            return analysis;
+        }
+        catch
+        {
+            // Return empty safe analysis on any error
+            return new StartupImpactAnalysis
+            {
+                TotalStartupPrograms = 0,
+                EnabledPrograms = 0,
+                DisabledPrograms = 0,
+                EstimatedBootTimeSeconds = 0,
+                PotentialTimeSavingSeconds = 0
+            };
+        }
     }
 
     #region Private Methods - Registry

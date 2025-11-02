@@ -63,18 +63,48 @@ public partial class DashboardViewModel : ObservableObject
     {
         try
         {
+            // Small delay to ensure UI is ready
+            await Task.Delay(100);
+
             // Get system resource usage
             var systemUsage = await _processMonitor.GetSystemResourceUsageAsync();
-            CpuUsage = systemUsage.CpuUsagePercentage;
-            MemoryUsage = systemUsage.MemoryUsagePercentage;
-            DiskUsage = systemUsage.DiskUsages.Count > 0 ? systemUsage.DiskUsages[0].UsagePercentage : 0;
+            CpuUsage = Math.Round(systemUsage.CpuUsagePercentage, 1);
+            MemoryUsage = Math.Round(systemUsage.MemoryUsagePercentage, 1);
+            DiskUsage = systemUsage.DiskUsages.Count > 0
+                ? Math.Round(systemUsage.DiskUsages[0].UsagePercentage, 1)
+                : 0;
         }
-        catch
+        catch (Exception ex)
         {
-            // Fallback to placeholder
-            CpuUsage = 45;
-            MemoryUsage = 51;
-            DiskUsage = 49;
+            System.Diagnostics.Debug.WriteLine($"Dashboard LoadInitialStatus error: {ex.Message}");
+
+            // Fallback: Try to get basic metrics directly
+            try
+            {
+                await Task.Run(() =>
+                {
+                    // Get CPU using PerformanceCounter
+                    using var cpuCounter = new System.Diagnostics.PerformanceCounter("Processor", "% Processor Time", "_Total");
+                    cpuCounter.NextValue(); // First call returns 0
+                    System.Threading.Thread.Sleep(500);
+                    CpuUsage = Math.Round(cpuCounter.NextValue(), 1);
+                });
+
+                // Get Memory
+                var gcMemory = GC.GetTotalMemory(false);
+                var process = System.Diagnostics.Process.GetCurrentProcess();
+                MemoryUsage = Math.Round((process.WorkingSet64 / 1024.0 / 1024.0), 1); // MB
+
+                // Disk - leave at 0 for now
+                DiskUsage = 0;
+            }
+            catch
+            {
+                // Final fallback - show placeholder
+                CpuUsage = 0;
+                MemoryUsage = 0;
+                DiskUsage = 0;
+            }
         }
     }
 

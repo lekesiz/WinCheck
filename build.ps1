@@ -42,7 +42,7 @@ Write-Host "   Restore complete" -ForegroundColor Gray
 # Step 3: Build solution
 Write-Host ""
 Write-Host "[3/6] Building solution..." -ForegroundColor Green
-dotnet build -c $Configuration --no-incremental
+dotnet build -c $Configuration /p:Platform=x64 --no-incremental
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
@@ -58,6 +58,7 @@ dotnet publish src\WinCheck.App\WinCheck.App.csproj `
     -c $Configuration `
     -r win-x64 `
     --self-contained true `
+    -p:Platform=x64 `
     -p:PublishSingleFile=false `
     -p:PublishReadyToRun=true `
     -o "$OutputDir\win-x64"

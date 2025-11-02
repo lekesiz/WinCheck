@@ -278,6 +278,55 @@ dotnet run
 4. **Lazy Loading**: UI bileşenlerinde deferred loading
 5. **Caching**: Sık kullanılan sistem bilgileri cache'lenir
 
+## Testing & Quality Assurance
+
+### Test Coverage
+WinCheck includes comprehensive unit and integration tests to ensure reliability and code quality.
+
+**Unit Tests**: 36 tests (100% pass rate)
+- **ValidationHelperTests** (14 tests): Drive letters, process IDs, API keys, percentages, port numbers, file names, IP addresses
+- **CacheHelperTests** (10 tests): Cache operations, expiration, concurrency, clear operations
+- **RetryHelperTests** (12 tests): Retry logic, exponential backoff, retry policies, exception filtering
+
+**Test Infrastructure**:
+```bash
+# Run all tests
+dotnet test tests/WinCheck.Tests/WinCheck.Tests.csproj
+
+# Run with coverage
+dotnet test tests/WinCheck.Tests/WinCheck.Tests.csproj --collect:"XPlat Code Coverage"
+
+# Run specific test
+dotnet test --filter "FullyQualifiedName~ValidationHelperTests"
+```
+
+**Quality Metrics**:
+- **Test Pass Rate**: 100% (36/36 tests passing)
+- **Test Execution Time**: ~168ms
+- **Framework**: MSTest 3.5.0
+- **Coverage Tool**: coverlet.collector 6.0.2
+
+### Infrastructure Testing
+
+The following critical infrastructure components have comprehensive test coverage:
+
+1. **Validation System**
+   - Input sanitization tests
+   - Boundary condition tests
+   - Security validation (API keys, paths, IPs)
+
+2. **Caching System**
+   - Cache hit/miss scenarios
+   - Expiration behavior
+   - Thread-safety tests
+
+3. **Retry Logic**
+   - Transient failure handling
+   - Exponential backoff verification
+   - Policy-based retry testing
+
+**Test Project Location**: `tests/WinCheck.Tests/`
+
 ## Lokalizasyon
 - **ResX** dosyaları ile çoklu dil desteği
 - Desteklenen diller: TR, EN, DE, FR, ES

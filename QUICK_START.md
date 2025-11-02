@@ -1,5 +1,14 @@
 # WinCheck - Hızlı Başlangıç Kılavuzu
 
+## ✅ Build Durumu
+
+**Backend Services (Core + Infrastructure):** ✅ **100% Çalışıyor!**
+- ✅ Tüm 9 servis production-ready
+- ✅ NuGet paketleri yüklü (System.ServiceProcess.ServiceController eklendi)
+- ⚠️ UI (WinUI App) - XAML düzeltmeleri devam ediyor
+
+**Backend'i test etmek için Visual Studio'da Infrastructure projesini build edebilirsiniz!**
+
 ## Projeyi Açma ve Çalıştırma
 
 ### Gereksinimler

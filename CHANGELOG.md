@@ -5,6 +5,46 @@ All notable changes to WinCheck will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-11-03
+
+### Added
+- **Dark Mode Support (ThemeService)**
+  - Light/Dark/System theme options
+  - Persistent theme settings across sessions
+  - Runtime theme switching without restart
+  - Automatic Windows system theme integration
+
+- **Command Line Interface (WinCheck.CLI)**
+  - Full-featured CLI tool with System.CommandLine
+  - Commands: scan, clean, status, process
+  - Progress indicators and formatted output
+  - Quick and deep scan modes
+  - Verbose logging option
+  - Automation and scripting support
+
+- **Advanced Error Handling (ErrorHandlingService)**
+  - Global exception handling for unhandled exceptions
+  - Crash dump generation in JSON format
+  - Error history tracking (last 100 errors)
+  - Severity levels: Info, Warning, Error, Critical
+  - Detailed error reports with full context
+  - Automatic crash dump cleanup (retains last 10)
+  - Thread-safe error collection
+
+- **Auto-Update Service (AutoUpdateService)**
+  - GitHub releases integration for updates
+  - Automatic version checking
+  - Semantic version comparison
+  - One-click download and install
+  - Release notes display
+  - Auto-elevation for installation
+
+### Technical Improvements
+- CLI project uses System.CommandLine for robust parsing
+- ThemeService uses Windows.Storage for settings persistence
+- ErrorHandlingService uses ConcurrentQueue for thread safety
+- AutoUpdateService integrates with GitHub API
+
 ## [1.0.1] - 2025-11-02
 
 ### Added

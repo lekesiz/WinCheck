@@ -72,7 +72,7 @@
             <!-- Control Buttons -->
             <StackPanel Orientation="Horizontal" Spacing="12">
                 <Button Content="Load Programs"
-                       Click="LoadButton_Click"
+                       Command="{x:Bind ViewModel.LoadDataCommand}"
                        Style="{StaticResource AccentButtonStyle}" />
 
                 <Button Content="Refresh"

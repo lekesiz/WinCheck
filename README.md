@@ -22,7 +22,7 @@ WinCheck, **AI destekli** Windows 7/8/10/11 işletim sistemleri için geliştiri
 - ✅ Tüm XAML sayfaları compile-time binding (`{x:Bind}`) kullanıyor
 - ✅ Dashboard metrics multi-level fallback ile çalışıyor
 - ✅ Settings sayfası erişilebilir
-- ⚠️ Startup Manager crash sorunu test ediliyor (debug handler yerinde)
+- ✅ Startup Manager crash sorunu çözüldü - Tam çalışıyor
 
 ## Teknik Özellikler
 
@@ -1186,11 +1186,18 @@ When opening GitHub issue, include:
 - ✅ Settings persistence
 
 ### Known Issues v1.0.0
-- ⚠️ Startup Manager may crash on "Load Programs" click (debug handler active for troubleshooting)
 - Settings → Language selection (not yet implemented)
 - Scheduled scans (not yet implemented)
 - Export reports to PDF (not yet implemented)
 - Dark theme (not yet implemented)
+
+### Future Enhancements v1.1+
+- Multi-language support (EN, DE, FR, ES)
+- Scheduled automatic scans
+- PDF/CSV report export
+- Dark theme / Fluent design customization
+- Cloud backup integration
+- Enterprise multi-PC management
 
 ---
 

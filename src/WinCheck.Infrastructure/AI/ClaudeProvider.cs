@@ -9,7 +9,12 @@ namespace WinCheck.Infrastructure.AI;
 
 public class ClaudeProvider : IAIProvider
 {
-    private readonly HttpClient _httpClient;
+    // Shared static HttpClient to avoid socket exhaustion
+    private static readonly HttpClient _sharedHttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(60)
+    };
+
     private readonly string _apiKey;
     private const string ApiEndpoint = "https://api.anthropic.com/v1/messages";
 
@@ -19,9 +24,6 @@ public class ClaudeProvider : IAIProvider
     public ClaudeProvider(string apiKey)
     {
         _apiKey = apiKey;
-        _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
-        _httpClient.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
     }
 
     public async Task<string> CompleteAsync(string prompt, AICompletionOptions? options = null)
@@ -43,7 +45,13 @@ public class ClaudeProvider : IAIProvider
         var json = JsonSerializer.Serialize(request);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(ApiEndpoint, content);
+        // Create request message with headers
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, ApiEndpoint);
+        requestMessage.Content = content;
+        requestMessage.Headers.Add("x-api-key", _apiKey);
+        requestMessage.Headers.Add("anthropic-version", "2023-06-01");
+
+        var response = await _sharedHttpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
 
         var responseJson = await response.Content.ReadAsStringAsync();

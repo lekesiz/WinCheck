@@ -9,7 +9,12 @@ namespace WinCheck.Infrastructure.AI;
 
 public class OpenAIProvider : IAIProvider
 {
-    private readonly HttpClient _httpClient;
+    // Shared static HttpClient to avoid socket exhaustion
+    private static readonly HttpClient _sharedHttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(60)
+    };
+
     private readonly string _apiKey;
     private const string ApiEndpoint = "https://api.openai.com/v1/chat/completions";
 
@@ -19,8 +24,6 @@ public class OpenAIProvider : IAIProvider
     public OpenAIProvider(string apiKey)
     {
         _apiKey = apiKey;
-        _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
     }
 
     public async Task<string> CompleteAsync(string prompt, AICompletionOptions? options = null)
@@ -42,7 +45,12 @@ public class OpenAIProvider : IAIProvider
         var json = JsonSerializer.Serialize(request);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(ApiEndpoint, content);
+        // Create request message with authorization header
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, ApiEndpoint);
+        requestMessage.Content = content;
+        requestMessage.Headers.Add("Authorization", $"Bearer {_apiKey}");
+
+        var response = await _sharedHttpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
 
         var responseJson = await response.Content.ReadAsStringAsync();

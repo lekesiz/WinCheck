@@ -9,7 +9,12 @@ namespace WinCheck.Infrastructure.AI;
 
 public class GeminiProvider : IAIProvider
 {
-    private readonly HttpClient _httpClient;
+    // Shared static HttpClient to avoid socket exhaustion
+    private static readonly HttpClient _sharedHttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(60)
+    };
+
     private readonly string _apiKey;
     private const string ApiEndpointTemplate = "https://generativelanguage.googleapis.com/v1/models/{0}:generateContent?key={1}";
 
@@ -19,7 +24,6 @@ public class GeminiProvider : IAIProvider
     public GeminiProvider(string apiKey)
     {
         _apiKey = apiKey;
-        _httpClient = new HttpClient();
     }
 
     public async Task<string> CompleteAsync(string prompt, AICompletionOptions? options = null)
@@ -51,7 +55,7 @@ public class GeminiProvider : IAIProvider
         var json = JsonSerializer.Serialize(request);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(endpoint, content);
+        var response = await _sharedHttpClient.PostAsync(endpoint, content);
         response.EnsureSuccessStatusCode();
 
         var responseJson = await response.Content.ReadAsStringAsync();

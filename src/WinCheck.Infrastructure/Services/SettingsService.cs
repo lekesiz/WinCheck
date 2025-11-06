@@ -6,9 +6,18 @@ using WinCheck.Core.Interfaces;
 using WinCheck.Core.Models;
 using WinCheck.Core.Services.AI;
 using WinCheck.Core.Helpers;
+using WinCheck.Core.Constants;
 
 namespace WinCheck.Infrastructure.Services;
 
+/// <summary>
+/// Service for managing application settings with encrypted API key storage
+/// </summary>
+/// <remarks>
+/// API keys are automatically encrypted using Windows DPAPI when saved.
+/// Encryption scope: CurrentUser only.
+/// Backward compatible with plaintext API keys from previous versions.
+/// </remarks>
 public class SettingsService : ISettingsService
 {
     private readonly string _settingsFilePath;
@@ -22,11 +31,11 @@ public class SettingsService : ISettingsService
 
         var appDataFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "WinCheck"
+            AppConstants.AppDataFolderName
         );
 
         Directory.CreateDirectory(appDataFolder);
-        _settingsFilePath = Path.Combine(appDataFolder, "settings.json");
+        _settingsFilePath = Path.Combine(appDataFolder, AppConstants.SettingsFileName);
 
         _jsonOptions = new JsonSerializerOptions
         {

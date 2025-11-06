@@ -4,19 +4,27 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WinCheck.Core.Services.AI;
+using WinCheck.Core.Constants;
 
 namespace WinCheck.Infrastructure.AI;
 
+/// <summary>
+/// Anthropic Claude provider implementation
+/// </summary>
+/// <remarks>
+/// Uses static shared HttpClient to prevent socket exhaustion.
+/// Supports Claude 3 (Sonnet, Opus, Haiku) models via messages API.
+/// </remarks>
 public class ClaudeProvider : IAIProvider
 {
     // Shared static HttpClient to avoid socket exhaustion
     private static readonly HttpClient _sharedHttpClient = new HttpClient
     {
-        Timeout = TimeSpan.FromSeconds(60)
+        Timeout = TimeSpan.FromSeconds(AIProviderConstants.ApiTimeoutSeconds)
     };
 
     private readonly string _apiKey;
-    private const string ApiEndpoint = "https://api.anthropic.com/v1/messages";
+    private const string ApiEndpoint = AIProviderConstants.ClaudeApiEndpoint;
 
     public string ProviderName => "Claude";
     public bool IsConfigured => !string.IsNullOrEmpty(_apiKey);
@@ -32,13 +40,13 @@ public class ClaudeProvider : IAIProvider
 
         var request = new
         {
-            model = options.Model ?? "claude-3-sonnet-20240229",
+            model = options.Model ?? AIProviderConstants.DefaultClaudeModel,
             max_tokens = options.MaxTokens,
             messages = new[]
             {
                 new { role = "user", content = prompt }
             },
-            system = options.SystemPrompt ?? "You are a helpful Windows system optimization assistant.",
+            system = options.SystemPrompt ?? AIProviderConstants.DefaultSystemPrompt,
             temperature = options.Temperature
         };
 
@@ -49,7 +57,7 @@ public class ClaudeProvider : IAIProvider
         using var requestMessage = new HttpRequestMessage(HttpMethod.Post, ApiEndpoint);
         requestMessage.Content = content;
         requestMessage.Headers.Add("x-api-key", _apiKey);
-        requestMessage.Headers.Add("anthropic-version", "2023-06-01");
+        requestMessage.Headers.Add("anthropic-version", AIProviderConstants.ClaudeApiVersion);
 
         var response = await _sharedHttpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();

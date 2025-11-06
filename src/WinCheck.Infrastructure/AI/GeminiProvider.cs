@@ -4,14 +4,27 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WinCheck.Core.Services.AI;
+using WinCheck.Core.Constants;
 
 namespace WinCheck.Infrastructure.AI;
 
+/// <summary>
+/// Google Gemini provider implementation
+/// </summary>
+/// <remarks>
+/// Uses static shared HttpClient to prevent socket exhaustion.
+/// Supports Gemini Pro and other Google AI models.
+/// </remarks>
 public class GeminiProvider : IAIProvider
 {
-    private readonly HttpClient _httpClient;
+    // Shared static HttpClient to avoid socket exhaustion
+    private static readonly HttpClient _sharedHttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(AIProviderConstants.ApiTimeoutSeconds)
+    };
+
     private readonly string _apiKey;
-    private const string ApiEndpointTemplate = "https://generativelanguage.googleapis.com/v1/models/{0}:generateContent?key={1}";
+    private const string ApiEndpointTemplate = AIProviderConstants.GeminiApiEndpointTemplate;
 
     public string ProviderName => "Gemini";
     public bool IsConfigured => !string.IsNullOrEmpty(_apiKey);
@@ -19,13 +32,12 @@ public class GeminiProvider : IAIProvider
     public GeminiProvider(string apiKey)
     {
         _apiKey = apiKey;
-        _httpClient = new HttpClient();
     }
 
     public async Task<string> CompleteAsync(string prompt, AICompletionOptions? options = null)
     {
         options ??= new AICompletionOptions();
-        var model = options.Model ?? "gemini-pro";
+        var model = options.Model ?? AIProviderConstants.DefaultGeminiModel;
 
         var endpoint = string.Format(ApiEndpointTemplate, model, _apiKey);
 
@@ -51,7 +63,7 @@ public class GeminiProvider : IAIProvider
         var json = JsonSerializer.Serialize(request);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(endpoint, content);
+        var response = await _sharedHttpClient.PostAsync(endpoint, content);
         response.EnsureSuccessStatusCode();
 
         var responseJson = await response.Content.ReadAsStringAsync();

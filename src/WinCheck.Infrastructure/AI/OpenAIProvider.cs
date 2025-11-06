@@ -4,14 +4,27 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WinCheck.Core.Services.AI;
+using WinCheck.Core.Constants;
 
 namespace WinCheck.Infrastructure.AI;
 
+/// <summary>
+/// OpenAI GPT provider implementation
+/// </summary>
+/// <remarks>
+/// Uses static shared HttpClient to prevent socket exhaustion.
+/// Supports GPT-4 and other OpenAI models via chat completions API.
+/// </remarks>
 public class OpenAIProvider : IAIProvider
 {
-    private readonly HttpClient _httpClient;
+    // Shared static HttpClient to avoid socket exhaustion
+    private static readonly HttpClient _sharedHttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(AIProviderConstants.ApiTimeoutSeconds)
+    };
+
     private readonly string _apiKey;
-    private const string ApiEndpoint = "https://api.openai.com/v1/chat/completions";
+    private const string ApiEndpoint = AIProviderConstants.OpenAIApiEndpoint;
 
     public string ProviderName => "OpenAI";
     public bool IsConfigured => !string.IsNullOrEmpty(_apiKey);
@@ -19,8 +32,6 @@ public class OpenAIProvider : IAIProvider
     public OpenAIProvider(string apiKey)
     {
         _apiKey = apiKey;
-        _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
     }
 
     public async Task<string> CompleteAsync(string prompt, AICompletionOptions? options = null)
@@ -29,10 +40,10 @@ public class OpenAIProvider : IAIProvider
 
         var request = new
         {
-            model = options.Model ?? "gpt-4",
+            model = options.Model ?? AIProviderConstants.DefaultOpenAIModel,
             messages = new[]
             {
-                new { role = "system", content = options.SystemPrompt ?? "You are a helpful Windows system optimization assistant." },
+                new { role = "system", content = options.SystemPrompt ?? AIProviderConstants.DefaultSystemPrompt },
                 new { role = "user", content = prompt }
             },
             temperature = options.Temperature,
@@ -42,7 +53,12 @@ public class OpenAIProvider : IAIProvider
         var json = JsonSerializer.Serialize(request);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(ApiEndpoint, content);
+        // Create request message with authorization header
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, ApiEndpoint);
+        requestMessage.Content = content;
+        requestMessage.Headers.Add("Authorization", $"Bearer {_apiKey}");
+
+        var response = await _sharedHttpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
 
         var responseJson = await response.Content.ReadAsStringAsync();
